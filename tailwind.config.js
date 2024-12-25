@@ -3,6 +3,9 @@ export default {
   content: ['index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     extend: {},
+    colors: {
+      primary: '#253c82',
+    },
   },
   plugins: [],
   prefix: 'tw-',
