@@ -42,7 +42,7 @@
     </q-drawer>
 
     <q-page-container>
-      <div>
+      <div style="min-height: calc(100vh - 50px); padding: 40px; background-color: #f6f6f6">
         <router-view />
       </div>
     </q-page-container>
