@@ -42,7 +42,9 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <div>
+        <router-view />
+      </div>
     </q-page-container>
   </q-layout>
 </template>
