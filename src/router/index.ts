@@ -35,7 +35,6 @@ export default defineRouter(function (/* { store, ssrContext } */) {
 
   Router.beforeEach((to, from, next) => {
     console.log(to, 'to')
-    console.log(from, 'from')
     next()
   })
 
