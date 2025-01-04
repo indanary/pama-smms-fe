@@ -30,19 +30,11 @@
 
           <q-item-section>Menu</q-item-section>
         </q-item>
-
-        <q-item clickable v-ripple>
-          <q-item-section avatar>
-            <q-icon color="primary" name="home" />
-          </q-item-section>
-
-          <q-item-section>Menu</q-item-section>
-        </q-item>
       </q-list>
     </q-drawer>
 
     <q-page-container>
-      <div style="min-height: calc(100vh - 50px); padding: 40px; background-color: #f6f6f6">
+      <div style="min-height: calc(100vh - 50px); padding: 32px; background-color: #f6f6f6">
         <router-view />
       </div>
     </q-page-container>
