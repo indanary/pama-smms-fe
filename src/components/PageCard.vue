@@ -1,6 +1,9 @@
 <template>
   <q-card style="min-height: 80vh; padding: 24px">
-    <slot />
+    <span style="font-size: 24px; font-weight: 500">Dashboard</span>
+    <div style="margin-top: 12px">
+      <slot />
+    </div>
   </q-card>
 </template>
 
