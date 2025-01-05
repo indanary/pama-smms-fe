@@ -20,6 +20,21 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
+  {
+    path: '/bookings',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('pages/BookingListPage.vue'),
+      },
+    ],
+    meta: {
+      noAuth: true,
+      title: 'Booking List',
+    },
+  },
+
   // Always leave this as last one,
   // but you can also remove it
   {

@@ -1,5 +1,5 @@
 <template>
-  <PageCard>
+  <PageCard title="Dashboard">
     <div>Welcome to Pama Improvement Dashboard</div>
   </PageCard>
 </template>
