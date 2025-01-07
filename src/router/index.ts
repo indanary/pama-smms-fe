@@ -6,6 +6,9 @@ import {
   createWebHistory,
 } from 'vue-router'
 import routes from './routes'
+import { Loading } from 'quasar'
+import { useTokenStore } from 'src/stores/token'
+import { useUserStore } from 'src/stores/user'
 
 /*
  * If not building with SSR mode, you can
@@ -33,8 +36,42 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   })
 
-  Router.beforeEach((to, from, next) => {
+  const tokenStore = useTokenStore()
+  const userStore = useUserStore()
+
+  Router.beforeEach(async (to, from, next) => {
+    Loading.show({
+      message: 'Loading...',
+    })
+
+    // set document title
+    if (to.meta.title) {
+      document.title = `${to.meta.title} | PAMA SMMS`
+    } else {
+      document.title = 'PAMA SMMS'
+    }
+
+    const isAuthenticated: boolean = !!tokenStore.getAccessToken()
+    if (!isAuthenticated && to.meta.requireAuth) {
+      tokenStore.removeToken()
+      next('/login')
+    }
+
+    if (isAuthenticated && to.path === '/login') {
+      next('/login')
+    }
+
+    if (isAuthenticated && to.meta.requireAuth) {
+      if (userStore.userProfile === null) {
+        await userStore.getUserProfile()
+      }
+    }
+
     next()
+  })
+
+  Router.afterEach(() => {
+    Loading.hide()
   })
 
   return Router

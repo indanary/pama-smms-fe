@@ -12,8 +12,8 @@ export const useAuthStore = defineStore('auth', {
         authService
           .login(payload)
           .then((res) => {
-            setCookie('accessToken', res.accessToken)
-            setCookie('refreshToken', res.refreshToken)
+            setCookie('accessToken', res.access_token)
+            setCookie('refreshToken', res.refresh_token)
 
             resolve()
           })

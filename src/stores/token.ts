@@ -9,6 +9,11 @@ export const useTokenStore = defineStore('token', {
       return getCookie('accessToken')
     },
 
+    removeToken(): void {
+      deleteCookie('accessToken', '/')
+      deleteCookie('refreshToken', '/')
+    },
+
     isTokenExpired(): boolean {
       try {
         const accessToken: string = this.getAccessToken() ?? ''
@@ -38,8 +43,7 @@ export const useTokenStore = defineStore('token', {
     },
 
     forceLogoutUser(): void {
-      deleteCookie('accessToken', '/')
-      deleteCookie('refreshToken', '/')
+      this.removeToken()
 
       window.location.reload()
     },

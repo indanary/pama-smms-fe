@@ -6,7 +6,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
     meta: {
-      noAuth: false,
+      requireAuth: true,
       title: 'Dashboard',
     },
   },
@@ -15,7 +15,7 @@ const routes: RouteRecordRaw[] = [
     path: '/login',
     children: [{ path: '', component: () => import('pages/SignInPage.vue') }],
     meta: {
-      noAuth: true,
+      requireAuth: false,
       title: 'Login',
     },
   },
@@ -30,7 +30,7 @@ const routes: RouteRecordRaw[] = [
       },
     ],
     meta: {
-      noAuth: true,
+      requireAuth: true,
       title: 'Booking List',
     },
   },

@@ -7,8 +7,8 @@ declare global {
   type PayloadLogin = FormLogin
 
   interface ResponseLogin extends GeneralResponse {
-    accessToken: string
-    refreshToken: string
+    access_token: string
+    refresh_token: string
   }
 }
 
