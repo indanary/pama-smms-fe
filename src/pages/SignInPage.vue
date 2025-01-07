@@ -27,10 +27,17 @@
       </q-card-section>
 
       <q-card-section>
-        <q-form ref="formRef" style="display: flex; flex-direction: column; gap: 20px">
+        <q-form greedy ref="formRef" style="display: flex; flex-direction: column; gap: 20px">
           <div style="display: flex; flex-direction: column; gap: 8px">
             <span>Email</span>
-            <q-input v-model="formState.email" type="email" filled dense outlined></q-input>
+            <q-input
+              v-model="formState.email"
+              type="email"
+              filled
+              dense
+              outlined
+              :rules="[new AuthRules().validateEmail]"
+            ></q-input>
           </div>
 
           <div style="display: flex; flex-direction: column; gap: 8px">
@@ -41,6 +48,7 @@
               filled
               dense
               outlined
+              :rules="[new AuthRules().validateEmail]"
             >
               <template v-slot:append>
                 <q-icon
@@ -52,7 +60,13 @@
             </q-input>
           </div>
 
-          <q-btn color="primary" label="Log in" no-caps />
+          <q-btn
+            color="primary"
+            label="Log in"
+            no-caps
+            :loading="isLoadingLogin"
+            @click="onLogin"
+          />
         </q-form>
       </q-card-section>
     </q-card>
@@ -61,20 +75,52 @@
 
 <script lang="ts">
 import { reactive, ref } from 'vue'
+import { type QForm } from 'quasar'
+import { useAuthStore } from 'src/stores/auth'
+import { AuthRules } from 'app/utils/auth.util.js'
 
 export default {
   name: 'SignInPage',
   setup() {
-    const formState = reactive({
+    const authStore = useAuthStore()
+
+    const formState = reactive<FormLogin>({
       email: '',
       password: '',
     })
     const isPassword = ref(true)
+    const isLoadingLogin = ref(false)
 
     return {
+      AuthRules,
+      authStore,
       formState,
       isPassword,
+      isLoadingLogin,
     }
+  },
+  methods: {
+    onLogin(): void {
+      ;(this.$refs.formRef as QForm).validate().then((isValid) => {
+        if (!isValid) return
+
+        this.isLoadingLogin = true
+
+        const payload: PayloadLogin = {
+          email: this.formState.email,
+          password: this.formState.password,
+        }
+
+        this.authStore
+          .login(payload)
+          .then(() => {
+            this.$router.push('/')
+          })
+          .finally(() => {
+            this.isLoadingLogin = false
+          })
+      })
+    },
   },
 }
 </script>
