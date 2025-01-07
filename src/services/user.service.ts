@@ -6,7 +6,7 @@ export default {
       api
         .get('/users/profile')
         .then((res) => {
-          resolve(res.data)
+          resolve(res)
         })
         .catch((err) => {
           reject(err.response.data.message ?? 'Unknown error')

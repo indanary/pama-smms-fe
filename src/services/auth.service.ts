@@ -13,4 +13,17 @@ export default {
         })
     })
   },
+
+  logout(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      unauthApi
+        .post('/auth/logout')
+        .then(() => {
+          resolve()
+        })
+        .catch((err) => {
+          reject(err.response.data.message ?? 'Unknown error')
+        })
+    })
+  },
 }

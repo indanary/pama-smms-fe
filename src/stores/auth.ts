@@ -2,6 +2,7 @@ import { setCookie } from 'app/utils/cookie'
 import { showNotificationFailed } from 'app/utils/notify.util'
 import { defineStore } from 'pinia'
 import authService from 'src/services/auth.service'
+import { useTokenStore } from './token'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({}),
@@ -21,6 +22,18 @@ export const useAuthStore = defineStore('auth', {
             showNotificationFailed(err)
             reject(err)
           })
+      })
+    },
+
+    logout(): Promise<void> {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      return new Promise((resolve, _reject) => {
+        authService.logout().finally(() => {
+          const tokenStore = useTokenStore()
+
+          tokenStore.forceLogoutUser()
+          resolve()
+        })
       })
     },
   },

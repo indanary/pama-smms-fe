@@ -10,7 +10,7 @@ declare global {
     last_updated_by: string
   }
 
-  interface ResponseUserProfile extends GeneralResponse {
+  interface ResponseUserProfile {
     data: UserProfile
   }
 }

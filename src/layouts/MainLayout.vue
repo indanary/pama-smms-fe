@@ -4,7 +4,26 @@
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
 
-        <q-toolbar-title> Title </q-toolbar-title>
+        <q-space></q-space>
+
+        <q-btn-dropdown color="white" flat icon="account_circle" size="lg">
+          <q-list>
+            <q-item style="cursor: default">
+              <q-item-section>
+                <q-item-label style="font-weight: 500">{{
+                  userStore.userProfile?.name
+                }}</q-item-label>
+                <q-item-label caption>{{ userStore.userProfile?.role }} </q-item-label>
+              </q-item-section>
+            </q-item>
+
+            <q-item clickable v-close-popup @click="authStore.logout">
+              <q-item-section>
+                <q-item-label style="font-weight: 500">Log out </q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
       </q-toolbar>
     </q-header>
 
@@ -42,18 +61,29 @@
 </template>
 
 <script lang="ts">
+import { useUserStore } from 'src/stores/user'
+import { useAuthStore } from 'src/stores/auth'
 import { ref } from 'vue'
 
 export default {
+  name: 'MainLayout',
   setup() {
+    const userStore = useUserStore()
+    const authStore = useAuthStore()
+
     const leftDrawerOpen = ref(false)
 
     return {
+      userStore,
+      authStore,
       leftDrawerOpen,
-      toggleLeftDrawer() {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      },
     }
+  },
+
+  methods: {
+    toggleLeftDrawer(): void {
+      this.leftDrawerOpen = !this.leftDrawerOpen
+    },
   },
 }
 </script>
