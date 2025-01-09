@@ -17,12 +17,23 @@
       <template v-slot:body="props">
         <q-tr :props="props" style="cursor: pointer">
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
-            <template v-if="col.name === 'action'">
+            <template v-if="col.name === 'id'"> BOOKSM{{ props.row.id }} </template>
+
+            <template v-else-if="col.name === 'approved_status'">
+              <q-icon :name="props.row.approved_status === 0 ? 'close' : 'check'"></q-icon>
+            </template>
+
+            <template v-else-if="col.name === 'booking_status'">
+              {{ props.row.booking_status === 'open' ? 'Open' : 'Close' }}
+            </template>
+
+            <template v-else-if="col.name === 'action'">
               <div style="display: flex; align-items: center; gap: 8px">
                 <q-btn color="secondary" no-caps>Edit</q-btn>
                 <q-btn color="red" no-caps>Delete</q-btn>
               </div>
             </template>
+
             <template v-else>
               <span>{{ props.row[col.name] }}</span>
             </template>
@@ -58,7 +69,7 @@ export default {
         required: true,
         label: 'Approved Status',
         field: 'approved_status',
-        align: 'left',
+        align: 'center',
       },
       {
         name: 'po_number',
