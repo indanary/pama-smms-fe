@@ -66,12 +66,6 @@ export default {
     }
   },
 
-  watch: {
-    'formState.items'(val) {
-      console.log(val, 'val')
-    },
-  },
-
   methods: {
     onAddBooking(): void {
       ;(this.$refs.formRef as QForm).validate().then((isValid) => {

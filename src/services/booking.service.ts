@@ -26,4 +26,17 @@ export default {
         })
     })
   },
+
+  deleteBooking(id: number): Promise<ResponseDeleteBooking> {
+    return new Promise((resolve, reject) => {
+      api
+        .delete(`/bookings/${id}`)
+        .then((res) => {
+          resolve({ message: res.data.message })
+        })
+        .catch((err) => {
+          reject(err.response.data.message ?? 'Unknown error')
+        })
+    })
+  },
 }

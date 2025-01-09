@@ -30,6 +30,10 @@ declare global {
   interface ResponseAddBooking {
     message: string
   }
+
+  interface ResponseDeleteBooking {
+    message: string
+  }
 }
 
 export {}

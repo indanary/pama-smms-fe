@@ -30,7 +30,7 @@
             <template v-else-if="col.name === 'action'">
               <div style="display: flex; align-items: center; gap: 8px">
                 <q-btn color="secondary" no-caps>Edit</q-btn>
-                <q-btn color="red" no-caps>Delete</q-btn>
+                <q-btn color="red" no-caps @click="openModalDelete(props.row.id)">Delete</q-btn>
               </div>
             </template>
 
@@ -49,6 +49,7 @@ import { ref, reactive } from 'vue'
 import { type QTableColumn } from 'quasar'
 import { useBookingStore } from 'src/stores/booking'
 import ModalAddBooking from 'src/components/booking/ModalAddBooking.vue'
+import ModalDeleteBooking from 'src/components/booking/ModalDeleteBooking.vue'
 
 export default {
   name: 'BookingListPage',
@@ -167,6 +168,19 @@ export default {
       this.$q
         .dialog({
           component: ModalAddBooking,
+        })
+        .onOk(() => {
+          this.fetchData()
+        })
+    },
+
+    openModalDelete(id: string): void {
+      this.$q
+        .dialog({
+          component: ModalDeleteBooking,
+          componentProps: {
+            id: id,
+          },
         })
         .onOk(() => {
           this.fetchData()
