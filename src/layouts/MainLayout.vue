@@ -42,13 +42,45 @@
           </q-item-section>
         </q-item>
 
-        <q-item clickable v-ripple>
-          <q-item-section avatar>
-            <q-icon color="primary" name="home" />
-          </q-item-section>
+        <template v-for="menu in SidebarMenuList" :key="menu.name">
+          <q-item
+            v-if="!menu.children && checkMenuPermission(menu.permission)"
+            clickable
+            v-ripple
+            @click="onClickMenu(menu.route ?? '')"
+          >
+            <q-item-section avatar>
+              <q-icon color="primary" :name="menu.icon" />
+            </q-item-section>
 
-          <q-item-section>Menu</q-item-section>
-        </q-item>
+            <q-item-section style="font-weight: 500">
+              {{ menu.name }}
+            </q-item-section>
+          </q-item>
+
+          <q-expansion-item
+            v-if="menu.children && checkParentMenuPermission(menu)"
+            :icon="menu.icon"
+            :label="menu.name"
+            style="font-weight: 500"
+          >
+            <q-item
+              v-for="child in menu.children"
+              :key="child.name"
+              clickable
+              v-ripple
+              @click="onClickMenu(child.route ?? '')"
+            >
+              <q-item-section avatar style="margin-left: 24px">
+                <q-icon color="primary" :name="child.icon" />
+              </q-item-section>
+
+              <q-item-section style="font-weight: 500">
+                {{ child.name }}
+              </q-item-section>
+            </q-item>
+          </q-expansion-item>
+        </template>
       </q-list>
     </q-drawer>
 
@@ -64,6 +96,7 @@
 import { useUserStore } from 'src/stores/user'
 import { useAuthStore } from 'src/stores/auth'
 import { ref } from 'vue'
+import { SidebarMenuList } from 'app/data/menu-list'
 
 export default {
   name: 'MainLayout',
@@ -77,12 +110,34 @@ export default {
       userStore,
       authStore,
       leftDrawerOpen,
+      SidebarMenuList,
     }
   },
 
   methods: {
     toggleLeftDrawer(): void {
       this.leftDrawerOpen = !this.leftDrawerOpen
+    },
+
+    onClickMenu(path: string): void {
+      this.$router.push(path)
+    },
+
+    checkMenuPermission(permission: string[] | undefined): boolean {
+      if (!permission) return true
+
+      return permission.includes(this.userStore.userProfile?.role ?? '')
+    },
+
+    checkParentMenuPermission(parentMenu: SidebarMenu): boolean {
+      if (!parentMenu.children) return false
+
+      const childrenPermission = parentMenu.children.map((c) =>
+        this.checkMenuPermission(c.permission),
+      )
+      const isMenuAvailable = childrenPermission.some((p) => p === true)
+
+      return isMenuAvailable
     },
   },
 }
