@@ -1,6 +1,6 @@
 <template>
   <PageCard title="Booking List">
-    <SearchInput></SearchInput>
+    <SearchInput :placeholder="'Search by Booking ID'"></SearchInput>
 
     <q-table
       :rows="bookingList"
@@ -18,52 +18,76 @@
 <script lang="ts">
 import { ref, reactive } from 'vue'
 import { type QTableColumn } from 'quasar'
+import { useBookingStore } from 'src/stores/booking'
 
 export default {
   name: 'BookingListPage',
   setup() {
-    const bookingList = ref([])
+    const bookingStore = useBookingStore()
+
+    const bookingList = ref([] as Booking[])
     const tableColumns: QTableColumn[] = [
       {
-        name: 'stock_code',
+        name: 'id',
         required: true,
-        label: 'Stock Code',
-        field: 'stock_code',
+        label: 'Booking ID',
+        field: 'id',
         align: 'left',
       },
       {
-        name: 'part_no',
+        name: 'approved_status',
         required: true,
-        label: 'Part No',
-        field: 'part_no',
+        label: 'Approved Status',
+        field: 'approved_status',
         align: 'left',
       },
       {
-        name: 'mnemonic',
+        name: 'po_number',
         required: true,
-        label: 'Mnemonic',
-        field: 'mnemonic',
+        label: 'PO Number',
+        field: 'po_number',
         align: 'left',
       },
       {
-        name: 'class',
+        name: 'due_date',
         required: true,
-        label: 'Class',
-        field: 'class',
+        label: 'Due Date',
+        field: 'due_date',
         align: 'left',
       },
       {
-        name: 'item_name',
+        name: 'booking_status',
         required: true,
-        label: 'Item Name',
-        field: 'item_name',
+        label: 'Booking Status',
+        field: 'booking_status',
         align: 'left',
       },
       {
-        name: 'uoi',
+        name: 'created_at',
         required: true,
-        label: 'UOI',
-        field: 'uoi',
+        label: 'Created At',
+        field: 'created_at',
+        align: 'left',
+      },
+      {
+        name: 'created_by',
+        required: true,
+        label: 'Created By',
+        field: 'created_by',
+        align: 'left',
+      },
+      {
+        name: 'last_updated_at',
+        required: true,
+        label: 'Last Updated At',
+        field: 'last_updated_at',
+        align: 'left',
+      },
+      {
+        name: 'last_updated_by',
+        required: true,
+        label: 'Last Updated By',
+        field: 'last_updated_by',
         align: 'left',
       },
     ]
@@ -73,12 +97,34 @@ export default {
       rowsNumber: 0,
       recordPerPage: [10, 25, 50],
     })
+    const isLoadingFetchList = ref(true)
 
     return {
+      bookingStore,
       bookingList,
       tableColumns,
       tablePaginations,
+      isLoadingFetchList,
     }
+  },
+
+  mounted() {
+    this.fetchData()
+  },
+
+  methods: {
+    fetchData(): void {
+      this.isLoadingFetchList = true
+
+      this.bookingStore
+        .getBookingList()
+        .then((res) => {
+          this.bookingList = res
+        })
+        .finally(() => {
+          this.isLoadingFetchList = false
+        })
+    },
   },
 }
 </script>

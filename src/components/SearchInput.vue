@@ -1,7 +1,7 @@
 <template>
   <div style="width: 100%; display: flex; justify-content: space-between; align-items: end">
     <div></div>
-    <q-input v-model="searchValue" outlined dense style="width: 200px">
+    <q-input v-model="searchValue" outlined dense style="width: 200px" :placeholder="placeholder">
       <template v-slot:append>
         <q-icon name="search" />
       </template>
@@ -14,6 +14,12 @@ import { ref } from 'vue'
 
 export default {
   name: 'SearchInput',
+  props: {
+    placeholder: {
+      type: String,
+      required: true,
+    },
+  },
   setup() {
     const searchValue = ref('')
 
