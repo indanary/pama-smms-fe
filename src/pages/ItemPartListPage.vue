@@ -1,6 +1,9 @@
 <template>
   <PageCard title="Item Part List">
-    <SearchInput :placeholder="'Search by Part No'"></SearchInput>
+    <div style="display: flex; justify-content: space-between; align-items: center">
+      <q-btn label="Add Item Part" color="primary" no-caps @click="openModalAdd"></q-btn>
+      <SearchInput :placeholder="'Search by Part No'"></SearchInput>
+    </div>
 
     <q-table
       :rows="itemList"
@@ -19,6 +22,7 @@
 import { ref, reactive } from 'vue'
 import { type QTableColumn } from 'quasar'
 import { useItemStore } from 'src/stores/item'
+import ModalAddItem from 'src/components/item/ModalAddItem.vue'
 
 export default {
   name: 'ItemPartListPage',
@@ -130,6 +134,16 @@ export default {
         })
         .finally(() => {
           this.isLoadingFetchList = false
+        })
+    },
+
+    openModalAdd(): void {
+      this.$q
+        .dialog({
+          component: ModalAddItem,
+        })
+        .onOk(() => {
+          this.fetchData()
         })
     },
   },

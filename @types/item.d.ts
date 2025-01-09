@@ -20,6 +20,21 @@ declare global {
   interface ResponseItemList {
     data: Item[]
   }
+
+  interface FormAddItem {
+    stock_code: string
+    part_no: string
+    mnemonic: string
+    class: string
+    item_name: string
+    uoi: string
+  }
+
+  type PayloadAddItem = FormAddItem
+
+  interface ResponseAddItem {
+    message: string
+  }
 }
 
 export {}

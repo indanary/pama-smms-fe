@@ -13,4 +13,17 @@ export default {
         })
     })
   },
+
+  addItem(payload: PayloadAddItem): Promise<ResponseAddItem> {
+    return new Promise((resolve, reject) => {
+      api
+        .post('/items', payload)
+        .then((res) => {
+          resolve({ message: res.data.message })
+        })
+        .catch((err) => {
+          reject(err.response.data.message ?? 'Unknown error')
+        })
+    })
+  },
 }
