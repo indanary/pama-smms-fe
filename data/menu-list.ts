@@ -23,7 +23,7 @@ export const SidebarMenuList: SidebarMenu[] = [
     ],
   },
   {
-    route: '/item-part',
+    route: '/items',
     icon: 'inventory_2',
     name: 'Item Part',
     permission: ['super_admin', 'admin', 'planner', 'inventory', 'purchasing', 'warehouse'],

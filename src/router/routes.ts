@@ -35,6 +35,21 @@ const routes: RouteRecordRaw[] = [
     },
   },
 
+  {
+    path: '/items',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('pages/ItemPartListPage.vue'),
+      },
+    ],
+    meta: {
+      requireAuth: true,
+      title: 'Item Part List',
+    },
+  },
+
   // Always leave this as last one,
   // but you can also remove it
   {
