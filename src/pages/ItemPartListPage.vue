@@ -14,6 +14,21 @@
       style="margin-top: 16px"
       table-header-style="background: var(--app-primary); color: white"
     >
+      <template v-slot:body="props">
+        <q-tr :props="props" style="cursor: pointer">
+          <q-td v-for="col in props.cols" :key="col.name" :props="props">
+            <template v-if="col.name === 'action'">
+              <div style="display: flex; align-items: center; gap: 8px">
+                <q-btn color="secondary" no-caps>Edit</q-btn>
+                <q-btn color="red" no-caps>Delete</q-btn>
+              </div>
+            </template>
+            <template v-else>
+              <span>{{ props.row[col.name] }}</span>
+            </template>
+          </q-td>
+        </q-tr>
+      </template>
     </q-table>
   </PageCard>
 </template>
@@ -99,6 +114,13 @@ export default {
         required: true,
         label: 'Last Updated By',
         field: 'last_updated_by',
+        align: 'left',
+      },
+      {
+        name: 'action',
+        required: true,
+        label: 'Action',
+        field: 'id',
         align: 'left',
       },
     ]
