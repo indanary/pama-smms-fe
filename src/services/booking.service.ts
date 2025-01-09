@@ -13,4 +13,17 @@ export default {
         })
     })
   },
+
+  addBooking(payload: PayloadAddBooking): Promise<ResponseAddBooking> {
+    return new Promise((resolve, reject) => {
+      api
+        .post('/bookings', payload)
+        .then((res) => {
+          resolve({ message: res.data.message })
+        })
+        .catch((err) => {
+          reject(err.response.data.message ?? 'Unknown error')
+        })
+    })
+  },
 }

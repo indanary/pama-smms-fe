@@ -1,6 +1,9 @@
 <template>
   <PageCard title="Booking List">
-    <SearchInput :placeholder="'Search by Booking ID'"></SearchInput>
+    <div style="display: flex; justify-content: space-between; align-items: center">
+      <q-btn label="Add Booking" color="primary" no-caps @click="openModalAdd"></q-btn>
+      <SearchInput :placeholder="'Search by Booking ID'"></SearchInput>
+    </div>
 
     <q-table
       :rows="bookingList"
@@ -11,6 +14,21 @@
       style="margin-top: 16px"
       table-header-style="background: var(--app-primary); color: white"
     >
+      <template v-slot:body="props">
+        <q-tr :props="props" style="cursor: pointer">
+          <q-td v-for="col in props.cols" :key="col.name" :props="props">
+            <template v-if="col.name === 'action'">
+              <div style="display: flex; align-items: center; gap: 8px">
+                <q-btn color="secondary" no-caps>Edit</q-btn>
+                <q-btn color="red" no-caps>Delete</q-btn>
+              </div>
+            </template>
+            <template v-else>
+              <span>{{ props.row[col.name] }}</span>
+            </template>
+          </q-td>
+        </q-tr>
+      </template>
     </q-table>
   </PageCard>
 </template>
@@ -19,6 +37,7 @@
 import { ref, reactive } from 'vue'
 import { type QTableColumn } from 'quasar'
 import { useBookingStore } from 'src/stores/booking'
+import ModalAddBooking from 'src/components/booking/ModalAddBooking.vue'
 
 export default {
   name: 'BookingListPage',
@@ -90,6 +109,13 @@ export default {
         field: 'last_updated_by',
         align: 'left',
       },
+      {
+        name: 'action',
+        required: true,
+        label: 'Action',
+        field: 'id',
+        align: 'left',
+      },
     ]
     const tablePaginations = reactive({
       page: 1,
@@ -123,6 +149,16 @@ export default {
         })
         .finally(() => {
           this.isLoadingFetchList = false
+        })
+    },
+
+    openModalAdd(): void {
+      this.$q
+        .dialog({
+          component: ModalAddBooking,
+        })
+        .onOk(() => {
+          this.fetchData()
         })
     },
   },

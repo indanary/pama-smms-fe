@@ -19,6 +19,17 @@ declare global {
   interface ResponseBookingList {
     data: Booking[]
   }
+
+  interface FormBooking {
+    description: string
+    items: number[]
+  }
+
+  type PayloadAddBooking = FormBooking
+
+  interface ResponseAddBooking {
+    message: string
+  }
 }
 
 export {}

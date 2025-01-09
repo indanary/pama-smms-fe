@@ -1,4 +1,4 @@
-import { showNotificationFailed } from 'app/utils/notify.util'
+import { showNotificationFailed, showNotificationSuccess } from 'app/utils/notify.util'
 import { defineStore } from 'pinia'
 import bookingService from 'src/services/booking.service'
 
@@ -10,6 +10,21 @@ export const useBookingStore = defineStore('booking', {
           .bookingList()
           .then((res) => {
             resolve(res.data)
+          })
+          .catch((err) => {
+            showNotificationFailed(err)
+            reject(err)
+          })
+      })
+    },
+
+    addBooking(payload: PayloadAddBooking): Promise<void> {
+      return new Promise((resolve, reject) => {
+        bookingService
+          .addBooking(payload)
+          .then((res) => {
+            showNotificationSuccess(res.message)
+            resolve()
           })
           .catch((err) => {
             showNotificationFailed(err)
