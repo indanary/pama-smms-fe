@@ -39,4 +39,17 @@ export default {
         })
     })
   },
+
+  bookingDetail(id: number): Promise<ResponseDetailBooking> {
+    return new Promise((resolve, reject) => {
+      api
+        .get(`/bookings/${id}`)
+        .then((res) => {
+          resolve({ data: res.data })
+        })
+        .catch((err) => {
+          reject(err.response.data.message ?? 'Unknown error')
+        })
+    })
+  },
 }

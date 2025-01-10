@@ -28,6 +28,13 @@ const routes: RouteRecordRaw[] = [
         path: '',
         component: () => import('pages/BookingListPage.vue'),
       },
+      {
+        path: ':id',
+        component: () => import('pages/BookingDetailPage.vue'),
+        meta: {
+          title: 'Booking Detail',
+        },
+      },
     ],
     meta: {
       requireAuth: true,

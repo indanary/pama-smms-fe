@@ -15,21 +15,54 @@
       table-header-style="background: var(--app-primary); color: white"
     >
       <template v-slot:body="props">
-        <q-tr :props="props" style="cursor: pointer">
+        <q-tr :props="props" style="cursor: pointer" @click="goToDetail(props.row.id)">
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
             <template v-if="col.name === 'id'"> BOOKSM{{ props.row.id }} </template>
 
             <template v-else-if="col.name === 'approved_status'">
-              <q-icon :name="props.row.approved_status === 0 ? 'close' : 'check'"></q-icon>
+              <div style="display: flex; align-items: center; gap: 8px">
+                <q-icon :name="props.row.approved_status === 0 ? 'close' : 'check'"></q-icon>
+                <q-btn v-if="props.row.approved_status === 0" color="secondary" no-caps
+                  >Update</q-btn
+                >
+              </div>
             </template>
 
             <template v-else-if="col.name === 'booking_status'">
               {{ props.row.booking_status === 'open' ? 'Open' : 'Close' }}
             </template>
 
+            <template v-else-if="col.name === 'po_number'">
+              <q-btn color="secondary" no-caps>Update</q-btn>
+            </template>
+
+            <template v-else-if="col.name === 'due_date'">
+              <q-btn color="secondary" no-caps>Update</q-btn>
+            </template>
+
+            <template v-else-if="col.name === 'received_date'">
+              <q-btn color="secondary" no-caps>Update</q-btn>
+            </template>
+
+            <template v-else-if="col.name === 'received'">
+              <div style="display: flex; align-items: center; gap: 8px">
+                <q-icon :name="props.row.received === 0 ? 'close' : 'check'"></q-icon>
+              </div>
+            </template>
+
+            <template v-else-if="col.name === 'wr_no'">
+              <q-btn
+                v-if="props.row.received === 1 && props.row.wr_no === ''"
+                color="secondary"
+                no-caps
+                >Create WR</q-btn
+              >
+              <span v-if="props.row.wr_no !== ''">{{ props.row.wr_no }}</span>
+            </template>
+
             <template v-else-if="col.name === 'action'">
               <div style="display: flex; align-items: center; gap: 8px">
-                <q-btn color="secondary" no-caps>Edit</q-btn>
+                <!-- <q-btn color="secondary" no-caps>Edit</q-btn> -->
                 <q-btn color="red" no-caps @click="openModalDelete(props.row.id)">Delete</q-btn>
               </div>
             </template>
@@ -73,6 +106,13 @@ export default {
         align: 'center',
       },
       {
+        name: 'description',
+        required: true,
+        label: 'Description',
+        field: 'description',
+        align: 'center',
+      },
+      {
         name: 'po_number',
         required: true,
         label: 'PO Number',
@@ -91,6 +131,27 @@ export default {
         required: true,
         label: 'Booking Status',
         field: 'booking_status',
+        align: 'left',
+      },
+      {
+        name: 'received_date',
+        required: true,
+        label: 'Received Date',
+        field: 'received_date',
+        align: 'left',
+      },
+      {
+        name: 'received',
+        required: true,
+        label: 'Received',
+        field: 'received',
+        align: 'left',
+      },
+      {
+        name: 'wr_no',
+        required: true,
+        label: 'WR No',
+        field: 'wr_no',
         align: 'left',
       },
       {
@@ -151,6 +212,10 @@ export default {
   },
 
   methods: {
+    goToDetail(id: number): void {
+      this.$router.push(`/bookings/${id}`)
+    },
+
     fetchData(): void {
       this.isLoadingFetchList = true
 

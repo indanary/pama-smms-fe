@@ -47,5 +47,19 @@ export const useBookingStore = defineStore('booking', {
           })
       })
     },
+
+    getBookingDetail(id: number): Promise<Booking> {
+      return new Promise((resolve, reject) => {
+        bookingService
+          .bookingDetail(id)
+          .then((res) => {
+            resolve(res.data)
+          })
+          .catch((err) => {
+            showNotificationFailed(err)
+            reject(err)
+          })
+      })
+    },
   },
 })

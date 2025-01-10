@@ -10,6 +10,9 @@ declare global {
     created_by: string
     last_updated_at: string
     last_updated_by: string
+    received_date: string
+    received: number
+    wr_no: string
   }
 
   interface ParamBookingList {
@@ -33,6 +36,10 @@ declare global {
 
   interface ResponseDeleteBooking {
     message: string
+  }
+
+  interface ResponseDetailBooking {
+    data: Booking
   }
 }
 
