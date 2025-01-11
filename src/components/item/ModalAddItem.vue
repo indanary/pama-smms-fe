@@ -3,15 +3,15 @@
     <q-card style="width: 1000px">
       <q-card-section>
         <div style="display: flex; justify-content: space-between; align-items: center">
-          <span style="font-size: 18px; font-weight: 500">Modal Add Item </span>
+          <span style="font-size: 18px; font-weight: 500">Modal Add Item Part</span>
           <q-btn icon="close" size="sm" dense @click="onDialogCancel"></q-btn>
         </div>
       </q-card-section>
 
-      <q-card-section>
-        <q-form greedy ref="formRef" style="display: flex; flex-direction: column; gap: 20px">
+      <q-card-section style="max-height: 60vh" class="scroll">
+        <q-form greedy ref="formRef" style="display: flex; flex-direction: column; gap: 8px">
           <div style="display: flex; flex-direction: column; gap: 8px">
-            <span>Stock Node</span>
+            <span class="app-input-required">Stock Node</span>
             <q-input
               v-model="formState.stock_code"
               type="text"
@@ -19,11 +19,12 @@
               dense
               outlined
               placeholder="Input stock node"
+              :rules="[new ItemRules().validateStockCode]"
             ></q-input>
           </div>
 
           <div style="display: flex; flex-direction: column; gap: 8px">
-            <span>Part No</span>
+            <span class="app-input-required">Part No</span>
             <q-input
               v-model="formState.part_no"
               type="text"
@@ -31,11 +32,12 @@
               dense
               outlined
               placeholder="Input part no"
+              :rules="[new ItemRules().validateRequired]"
             ></q-input>
           </div>
 
           <div style="display: flex; flex-direction: column; gap: 8px">
-            <span>Mnemonic</span>
+            <span class="app-input-required">Mnemonic</span>
             <q-input
               v-model="formState.mnemonic"
               type="text"
@@ -43,11 +45,12 @@
               dense
               outlined
               placeholder="Input mnemonic"
+              :rules="[new ItemRules().validateRequired]"
             ></q-input>
           </div>
 
           <div style="display: flex; flex-direction: column; gap: 8px">
-            <span>Class</span>
+            <span class="app-input-required">Class</span>
             <q-input
               v-model="formState.class"
               type="text"
@@ -55,11 +58,12 @@
               dense
               outlined
               placeholder="Input class"
+              :rules="[new ItemRules().validateRequired]"
             ></q-input>
           </div>
 
           <div style="display: flex; flex-direction: column; gap: 8px">
-            <span>Item Name</span>
+            <span class="app-input-required">Item Name</span>
             <q-input
               v-model="formState.item_name"
               type="text"
@@ -67,11 +71,12 @@
               dense
               outlined
               placeholder="Input item name"
+              :rules="[new ItemRules().validateRequired]"
             ></q-input>
           </div>
 
           <div style="display: flex; flex-direction: column; gap: 8px">
-            <span>UOI</span>
+            <span class="app-input-required">UOI</span>
             <q-input
               v-model="formState.uoi"
               type="text"
@@ -79,6 +84,7 @@
               dense
               outlined
               placeholder="Input uoi"
+              :rules="[new ItemRules().validateRequired]"
             ></q-input>
           </div>
         </q-form>
@@ -86,8 +92,14 @@
 
       <q-card-section>
         <div style="display: flex; justify-content: end; align-items: center; gap: 8px">
-          <q-btn no-caps label="Cancel" @click="onDialogCancel"></q-btn>
-          <q-btn no-caps label="Add" color="primary" @click="onAddItem"></q-btn>
+          <q-btn no-caps label="Cancel" @click="onDialogCancel" :disable="isLoadingAdd"></q-btn>
+          <q-btn
+            no-caps
+            label="Add"
+            color="primary"
+            @click="onAddItem"
+            :loading="isLoadingAdd"
+          ></q-btn>
         </div>
       </q-card-section>
     </q-card>
@@ -96,8 +108,9 @@
 
 <script lang="ts">
 import { useDialogPluginComponent, type QForm } from 'quasar'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useItemStore } from 'src/stores/item'
+import { ItemRules } from 'app/utils/item.util.js'
 
 export default {
   name: 'ModalAddItem',
@@ -113,6 +126,7 @@ export default {
       item_name: '',
       uoi: '',
     })
+    const isLoadingAdd = ref(false)
 
     return {
       dialogRef,
@@ -120,6 +134,8 @@ export default {
       onDialogOK,
       itemStore,
       formState,
+      ItemRules,
+      isLoadingAdd,
     }
   },
 
@@ -127,6 +143,8 @@ export default {
     onAddItem(): void {
       ;(this.$refs.formRef as QForm).validate().then((isValid) => {
         if (!isValid) return
+
+        this.isLoadingAdd = true
 
         const payload: PayloadAddItem = {
           stock_code: this.formState.stock_code,
@@ -137,9 +155,14 @@ export default {
           uoi: this.formState.uoi,
         }
 
-        this.itemStore.addItem(payload).then(() => {
-          this.onDialogOK()
-        })
+        this.itemStore
+          .addItem(payload)
+          .then(() => {
+            this.onDialogOK()
+          })
+          .finally(() => {
+            this.isLoadingAdd = false
+          })
       })
     },
   },
