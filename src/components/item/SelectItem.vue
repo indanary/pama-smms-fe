@@ -47,7 +47,7 @@ export default {
 
   methods: {
     fetchOptions(): void {
-      this.itemStore.getItemList().then((res) => {
+      this.itemStore.getItemList({}).then((res) => {
         this.options = res
       })
     },

@@ -1,10 +1,11 @@
 import { api } from 'src/boot/axios'
+import { buildParams } from 'app/utils/common.util'
 
 export default {
-  itemList(): Promise<ResponseItemList> {
+  itemList(params: ParamItemList): Promise<ResponseItemList> {
     return new Promise((resolve, reject) => {
       api
-        .get('/items')
+        .get(`/items${buildParams(params)}`)
         .then((res) => {
           resolve(res)
         })

@@ -2,7 +2,7 @@
   <PageCard title="Item Part List">
     <div style="display: flex; justify-content: space-between; align-items: center">
       <q-btn label="Add Item Part" color="primary" no-caps @click="openModalAdd"></q-btn>
-      <SearchInput :placeholder="'Search by Part No'"></SearchInput>
+      <SearchInput :placeholder="'Search by Part No'" @search="onSearch"></SearchInput>
     </div>
 
     <q-table
@@ -136,6 +136,7 @@ export default {
       recordPerPage: [10, 25, 50],
     })
     const isLoadingFetchList = ref(true)
+    const params: ParamItemList = {}
 
     return {
       itemStore,
@@ -143,6 +144,7 @@ export default {
       tableColumns,
       tablePaginations,
       isLoadingFetchList,
+      params,
     }
   },
 
@@ -155,7 +157,7 @@ export default {
       this.isLoadingFetchList = true
 
       this.itemStore
-        .getItemList()
+        .getItemList(this.params)
         .then((res) => {
           this.itemList = res
         })
@@ -172,6 +174,12 @@ export default {
         .onOk(() => {
           this.fetchData()
         })
+    },
+
+    onSearch(val: string): void {
+      this.params.stock_code = val
+
+      this.fetchData()
     },
   },
 }

@@ -4,10 +4,10 @@ import itemService from 'src/services/item.service'
 
 export const useItemStore = defineStore('item', {
   actions: {
-    getItemList(): Promise<Item[]> {
+    getItemList(params: ParamItemList): Promise<Item[]> {
       return new Promise((resolve, reject) => {
         itemService
-          .itemList()
+          .itemList(params)
           .then((res) => {
             resolve(res.data)
           })

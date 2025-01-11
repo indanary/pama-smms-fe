@@ -1,5 +1,12 @@
 <template>
-  <q-input v-model="searchValue" outlined dense style="width: 200px" :placeholder="placeholder">
+  <q-input
+    v-model="searchValue"
+    outlined
+    dense
+    style="width: 200px"
+    :placeholder="placeholder"
+    debounce="700"
+  >
     <template v-slot:append>
       <q-icon name="search" />
     </template>
