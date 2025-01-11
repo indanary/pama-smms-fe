@@ -6,6 +6,7 @@
     </div>
 
     <q-table
+      v-if="!isLoadingFetchList"
       :rows="itemList"
       :columns="tableColumns"
       :pagination="tablePaginations"
@@ -14,7 +15,7 @@
       style="margin-top: 16px"
       table-header-style="background: var(--app-primary); color: white"
     >
-      <template v-slot:body="props">
+      <!-- <template v-slot:body="props">
         <q-tr :props="props" style="cursor: pointer">
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
             <template v-if="col.name === 'action'">
@@ -28,8 +29,12 @@
             </template>
           </q-td>
         </q-tr>
-      </template>
+      </template> -->
     </q-table>
+
+    <div v-else style="margin-top: 16px">
+      <SkeletonLoader :num="6"></SkeletonLoader>
+    </div>
   </PageCard>
 </template>
 
@@ -116,13 +121,13 @@ export default {
         field: 'last_updated_by',
         align: 'left',
       },
-      {
-        name: 'action',
-        required: true,
-        label: 'Action',
-        field: 'id',
-        align: 'left',
-      },
+      // {
+      //   name: 'action',
+      //   required: true,
+      //   label: 'Action',
+      //   field: 'id',
+      //   align: 'left',
+      // },
     ]
     const tablePaginations = reactive({
       page: 1,
