@@ -11,7 +11,13 @@
             :name="detailData?.approved_status === 0 ? 'close' : 'check'"
             :color="detailData?.approved_status === 0 ? 'red' : 'green'"
           ></q-icon>
-          <q-btn v-if="detailData?.approved_status === 0" color="secondary" no-caps>Update</q-btn>
+          <q-btn
+            v-if="detailData?.approved_status === 0"
+            color="secondary"
+            no-caps
+            @click="openModalUpdateApproveStatus(detailData?.id.toString())"
+            >Update</q-btn
+          >
         </div>
       </DetailItem>
 
@@ -20,10 +26,18 @@
       </DetailItem>
 
       <DetailItem label="PO Numbers">
-        <span v-if="detailData?.po_numbers">
-          {{ detailData?.po_numbers }}
-        </span>
-        <q-btn v-else color="secondary" no-caps>Update</q-btn>
+        <template v-if="detailData?.approved_status === 1">
+          <span v-if="detailData?.po_numbers.length !== 0">
+            {{ detailData?.po_numbers.join(', ') }}
+          </span>
+          <q-btn
+            v-else
+            color="secondary"
+            no-caps
+            @click.stop="openModalUpdatePO(detailData?.id.toString())"
+            >Update</q-btn
+          >
+        </template>
       </DetailItem>
 
       <DetailItem label="Booking Status">
@@ -81,6 +95,8 @@
 <script lang="ts">
 import { ref } from 'vue'
 import { useBookingStore } from 'src/stores/booking'
+import ModalUpdateApproveStatus from 'src/components/booking/ModalUpdateApproveStatus.vue'
+import ModalUpdatePO from 'src/components/booking/ModalUpdatePO.vue'
 
 export default {
   name: 'BookingDetailPage',
@@ -108,6 +124,32 @@ export default {
 
     openModalDelete(id: number | undefined): void {
       console.log(id, 'id')
+    },
+
+    openModalUpdateApproveStatus(id: string): void {
+      this.$q
+        .dialog({
+          component: ModalUpdateApproveStatus,
+          componentProps: {
+            id: id,
+          },
+        })
+        .onOk(() => {
+          this.fetchData()
+        })
+    },
+
+    openModalUpdatePO(id: string): void {
+      this.$q
+        .dialog({
+          component: ModalUpdatePO,
+          componentProps: {
+            id: id,
+          },
+        })
+        .onOk(() => {
+          this.fetchData()
+        })
     },
   },
 }

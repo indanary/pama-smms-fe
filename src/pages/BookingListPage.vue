@@ -70,7 +70,7 @@
             </template>
 
             <template v-else-if="col.name === 'received'">
-              <div style="display: flex; align-items: center; gap: 8px">
+              <div style="display: flex; align-items: center; justify-content: center; gap: 8px">
                 <q-icon
                   :name="props.row.received === 0 ? 'close' : 'check'"
                   :color="props.row.received === 0 ? 'red' : 'green'"
