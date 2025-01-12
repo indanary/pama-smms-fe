@@ -128,7 +128,7 @@
                   no-caps
                   color="secondary"
                   size="sm"
-                  @click="openModalChoosePO(props.row.id)"
+                  @click="openModalChoosePO(props.row.po_number)"
                 ></q-btn>
               </template>
               <template v-else>
@@ -292,13 +292,13 @@ export default {
         })
     },
 
-    openModalChoosePO(poId: number): void {
+    openModalChoosePO(poNumber: string): void {
       this.$q
         .dialog({
           component: ModalChoosePOItem,
           componentProps: {
             bookingId: Number(this.$route.params.id),
-            poId: poId,
+            poNumber: poNumber,
           },
         })
         .onOk(() => {

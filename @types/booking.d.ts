@@ -86,7 +86,7 @@ declare global {
   interface PayloadUpdateBookingPoItems {
     booking_id: number
     item_ids: number[]
-    po_id: number
+    po_number: string
   }
 
   interface ResponseUpdateBookingPoItems {

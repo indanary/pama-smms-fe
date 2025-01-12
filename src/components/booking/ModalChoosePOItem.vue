@@ -80,8 +80,8 @@ export default {
       type: Number,
       required: true,
     },
-    poId: {
-      type: Number,
+    poNumber: {
+      type: String,
       required: true,
     },
   },
@@ -138,7 +138,7 @@ export default {
         const payload: PayloadUpdateBookingPoItems = {
           booking_id: this.bookingId,
           item_ids: this.selectedItem,
-          po_id: this.poId,
+          po_number: this.poNumber,
         }
 
         this.bookingStore
