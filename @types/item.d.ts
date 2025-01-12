@@ -11,6 +11,7 @@ declare global {
     created_by: string
     last_updated_at: string
     last_updated_by: string
+    qty: number
   }
 
   interface ParamItemList {
@@ -22,12 +23,13 @@ declare global {
   }
 
   interface FormAddItem {
-    stock_code: string
+    stock_code: number | undefined
     part_no: string
     mnemonic: string
     class: string
     item_name: string
     uoi: string
+    qty: number | undefined
   }
 
   type PayloadAddItem = FormAddItem
@@ -37,12 +39,13 @@ declare global {
   }
 
   interface ExcelColumnItem {
-    stock_code: string
+    stock_code: number
     part_no: string
     mnemonic: string
     class: string
     item_name: string
     uoi: string
+    qty: number
   }
 
   interface PayloadImportItem {

@@ -62,18 +62,22 @@ export const useItemStore = defineStore('item', {
           if (!headerColumn.hasOwnProperty('class')) throw 'Missing column class'
           if (!headerColumn.hasOwnProperty('item_name')) throw 'Missing column item_name'
           if (!headerColumn.hasOwnProperty('uoi')) throw 'Missing column uoi'
+          if (!headerColumn.hasOwnProperty('qty')) throw 'Missing column qty'
 
           const mappedData: ExcelColumnItem[] = []
 
           data.forEach((item: ExcelColumnItem) => {
-            if (item.stock_code === undefined || item.stock_code === '')
-              throw 'Missing stock_code value'
+            if (item.stock_code === undefined) throw 'Missing stock_code value'
             if (item.part_no === undefined || item.part_no === '') throw 'Missing part_no value'
             if (item.mnemonic === undefined || item.mnemonic === '') throw 'Missing mnemonic value'
             if (item.class === undefined || item.class === '') throw 'Missing class value'
             if (item.item_name === undefined || item.item_name === '')
               throw 'Missing item_name value'
             if (item.uoi === undefined || item.uoi === '') throw 'Missing uoi value'
+            if (item.qty === undefined) throw 'Missing uoi value'
+
+            if (isNaN(Number(item.stock_code))) throw 'Stock code must be a number'
+            if (isNaN(Number(item.qty))) throw 'Qty must be a number'
 
             const selectedColumnItem: ExcelColumnItem = {
               stock_code: item.stock_code,
@@ -82,6 +86,7 @@ export const useItemStore = defineStore('item', {
               class: item.class,
               item_name: item.item_name,
               uoi: item.uoi,
+              qty: item.qty,
             }
 
             mappedData.push(selectedColumnItem)

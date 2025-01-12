@@ -12,8 +12,26 @@ export class ItemRules {
   validateStockCode(val: string): boolean | string {
     if (!val) return 'Field is required'
 
-    if (isNaN(Number(val)) && Number(val) < 0) {
+    if (isNaN(Number(val))) {
       return 'Stock Code must be a positive number'
+    }
+
+    if (Number(val) < 1) {
+      return 'Stock Code must be a positive number'
+    }
+
+    return true
+  }
+
+  validateQty(val: string): boolean | string {
+    if (!val) return 'Field is required'
+
+    if (isNaN(Number(val))) {
+      return 'Qty must be a positive number'
+    }
+
+    if (Number(val) < 1) {
+      return 'Qty must be a positive number'
     }
 
     return true
