@@ -8,10 +8,10 @@
         </div>
       </q-card-section>
 
-      <q-card-section>
+      <q-card-section style="max-height: 60vh" class="scroll">
         <q-form greedy ref="formRef" style="display: flex; flex-direction: column; gap: 20px">
           <div style="display: flex; flex-direction: column; gap: 8px">
-            <span>Description</span>
+            <span class="app-input-required">Description</span>
             <q-input
               v-model="formState.description"
               type="text"
@@ -19,11 +19,12 @@
               dense
               outlined
               placeholder="Input description"
+              :rules="[new BookingRules().validateRequired]"
             ></q-input>
           </div>
 
           <div style="display: flex; flex-direction: column; gap: 8px">
-            <span>Items</span>
+            <span class="app-input-required">Items</span>
             <SelectItem v-model="formState.items"></SelectItem>
           </div>
         </q-form>
@@ -44,6 +45,7 @@ import { useDialogPluginComponent, type QForm } from 'quasar'
 import { reactive } from 'vue'
 import { useBookingStore } from 'src/stores/booking'
 import SelectItem from 'src/components/item/SelectItem.vue'
+import { BookingRules } from 'app/utils/booking.util.js'
 
 export default {
   name: 'ModalAddBooking',
@@ -63,6 +65,7 @@ export default {
       onDialogOK,
       bookingStore,
       formState,
+      BookingRules,
     }
   },
 
