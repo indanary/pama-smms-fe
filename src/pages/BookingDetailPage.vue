@@ -7,7 +7,10 @@
 
       <DetailItem label="Approved Status">
         <div style="display: flex; align-items: center; gap: 8px">
-          <q-icon :name="detailData?.approved_status === 0 ? 'close' : 'check'"></q-icon>
+          <q-icon
+            :name="detailData?.approved_status === 0 ? 'close' : 'check'"
+            :color="detailData?.approved_status === 0 ? 'red' : 'green'"
+          ></q-icon>
           <q-btn v-if="detailData?.approved_status === 0" color="secondary" no-caps>Update</q-btn>
         </div>
       </DetailItem>
@@ -42,7 +45,10 @@
       </DetailItem>
 
       <DetailItem label="Received">
-        <q-icon :name="detailData?.received === 0 ? 'close' : 'check'"></q-icon>
+        <q-icon
+          :name="detailData?.received === 0 ? 'close' : 'check'"
+          :color="detailData?.received === 0 ? 'red' : 'green'"
+        ></q-icon>
       </DetailItem>
 
       <DetailItem label="WR No">

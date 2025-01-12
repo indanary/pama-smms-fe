@@ -16,8 +16,13 @@
       table-header-style="background: var(--app-primary); color: white"
     >
       <template v-slot:body="props">
-        <q-tr :props="props" style="cursor: pointer" @click="goToDetail(props.row.id)">
-          <q-td v-for="col in props.cols" :key="col.name" :props="props">
+        <q-tr :props="props" style="cursor: pointer">
+          <q-td
+            v-for="col in props.cols"
+            :key="col.name"
+            :props="props"
+            @click="goToDetail(props.row.id)"
+          >
             <template v-if="col.name === 'id'"> BOOKSM{{ props.row.id }} </template>
 
             <template v-else-if="col.name === 'approved_status'">
@@ -37,15 +42,24 @@
             </template>
 
             <template v-else-if="col.name === 'po_number'">
-              <q-btn color="secondary" no-caps>Update</q-btn>
+              <span v-if="props.row.po_number">
+                {{ props.row.po_number }}
+              </span>
+              <q-btn v-else color="secondary" no-caps>Update</q-btn>
             </template>
 
             <template v-else-if="col.name === 'due_date'">
-              <q-btn color="secondary" no-caps>Update</q-btn>
+              <span v-if="props.row.due_date">
+                {{ props.row.due_date }}
+              </span>
+              <q-btn v-else color="secondary" no-caps>Update</q-btn>
             </template>
 
             <template v-else-if="col.name === 'received_date'">
-              <q-btn color="secondary" no-caps>Update</q-btn>
+              <span v-if="props.row.received_date">
+                {{ props.row.received_date }}
+              </span>
+              <q-btn v-else color="secondary" no-caps>Update</q-btn>
             </template>
 
             <template v-else-if="col.name === 'received'">
@@ -70,7 +84,9 @@
             <template v-else-if="col.name === 'action'">
               <div style="display: flex; align-items: center; gap: 8px">
                 <!-- <q-btn color="secondary" no-caps>Edit</q-btn> -->
-                <q-btn color="red" no-caps @click="openModalDelete(props.row.id)">Delete</q-btn>
+                <q-btn color="red" no-caps @click.stop="openModalDelete(props.row.id)"
+                  >Delete</q-btn
+                >
               </div>
             </template>
 
