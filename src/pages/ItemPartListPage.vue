@@ -6,11 +6,11 @@
     </div>
 
     <q-table
-      v-if="!isLoadingFetchList"
       :rows="itemList"
       :columns="tableColumns"
       :pagination="tablePaginations"
       :rows-per-page-options="tablePaginations.recordPerPage"
+      :loading="isLoadingFetchList"
       row-key="id"
       style="margin-top: 16px"
       table-header-style="background: var(--app-primary); color: white"
@@ -32,9 +32,9 @@
       </template> -->
     </q-table>
 
-    <div v-else style="margin-top: 16px">
+    <!-- <div v-else style="margin-top: 16px">
       <SkeletonLoader :num="6"></SkeletonLoader>
-    </div>
+    </div> -->
   </PageCard>
 </template>
 
