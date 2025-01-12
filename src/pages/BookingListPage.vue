@@ -45,10 +45,10 @@
               {{ props.row.booking_status === 'open' ? 'Open' : 'Close' }}
             </template>
 
-            <template v-else-if="col.name === 'po_numbers'">
+            <template v-else-if="col.name === 'po_details'">
               <template v-if="props.row.approved_status === 1">
-                <span v-if="props.row.po_numbers.length !== 0">
-                  {{ props.row.po_numbers.join(', ') }}
+                <span v-if="props.row.po_details.length !== 0">
+                  {{ props.row.po_details.map((p: any) => p.po_number).join(', ') }}
                 </span>
                 <q-btn
                   v-else
@@ -147,10 +147,10 @@ export default {
         align: 'center',
       },
       {
-        name: 'po_numbers',
+        name: 'po_details',
         required: true,
         label: 'PO Numbers',
-        field: 'po_numbers',
+        field: 'po_details',
         align: 'center',
       },
       {

@@ -2,7 +2,7 @@ declare global {
   interface Booking {
     id: number
     approved_status: number
-    po_numbers: string[]
+    po_details: { status: string; po_number: string }[]
     booking_status: string
     description: string
     created_at: string

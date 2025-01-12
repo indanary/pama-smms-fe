@@ -28,8 +28,8 @@
 
         <DetailItem label="PO Numbers">
           <template v-if="detailData?.approved_status === 1">
-            <span v-if="detailData?.po_numbers.length !== 0">
-              {{ detailData?.po_numbers.join(', ') }}
+            <span v-if="detailData?.po_details.length !== 0">
+              {{ detailData?.po_details.map((p: any) => p.po_number).join(', ') }}
             </span>
             <q-btn
               v-else
@@ -46,10 +46,12 @@
         </DetailItem>
 
         <DetailItem label="Received Date">
-          <span v-if="detailData?.received_date">
-            {{ detailData?.received_date }}
-          </span>
-          <q-btn v-else color="secondary" no-caps>Update</q-btn>
+          <template v-if="canUpdateReceivedDate()">
+            <span v-if="detailData?.received_date">
+              {{ detailData?.received_date }}
+            </span>
+            <q-btn v-else color="secondary" no-caps>Update</q-btn>
+          </template>
         </DetailItem>
 
         <DetailItem label="Received">
@@ -378,6 +380,12 @@ export default {
           this.fetchData()
           this.fetchListPo()
         })
+    },
+
+    canUpdateReceivedDate(): boolean {
+      if (!this.detailData) return false
+
+      return this.detailData?.po_details.every((po) => po.status === 'completed')
     },
   },
 }
