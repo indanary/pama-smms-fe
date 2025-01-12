@@ -19,9 +19,9 @@
         <span>{{ detailData?.description }}</span>
       </DetailItem>
 
-      <DetailItem label="PO Number">
-        <span v-if="detailData?.po_number">
-          {{ detailData?.po_number }}
+      <DetailItem label="PO Numbers">
+        <span v-if="detailData?.po_numbers">
+          {{ detailData?.po_numbers }}
         </span>
         <q-btn v-else color="secondary" no-caps>Update</q-btn>
       </DetailItem>

@@ -2,7 +2,7 @@ declare global {
   interface Booking {
     id: number
     approved_status: number
-    po_number: string
+    po_numbers: string[]
     due_date: string
     booking_status: string
     description: string
@@ -44,13 +44,21 @@ declare global {
 
   interface PayloadUpdateBooking {
     approved_status?: number
-    po_number?: string
     due_date?: string
     received_date?: string
     wr_no?: string
   }
 
   interface ResponseUpdateBooking {
+    message: string
+  }
+
+  interface PayloadUpdateBookingPo {
+    booking_id: number
+    po_numbers: string[]
+  }
+
+  interface ResponseUpdateBookingPo {
     message: string
   }
 }

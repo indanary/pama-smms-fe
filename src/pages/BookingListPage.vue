@@ -45,17 +45,23 @@
               {{ props.row.booking_status === 'open' ? 'Open' : 'Close' }}
             </template>
 
-            <template v-else-if="col.name === 'po_number'">
+            <template v-else-if="col.name === 'po_numbers'">
               <template v-if="props.row.approved_status === 1">
-                <span v-if="props.row.po_number">
-                  {{ props.row.po_number }}
+                <span v-if="props.row.po_numbers.length !== 0">
+                  {{ props.row.po_numbers.join(', ') }}
                 </span>
-                <q-btn v-else color="secondary" no-caps>Update</q-btn>
+                <q-btn
+                  v-else
+                  color="secondary"
+                  no-caps
+                  @click.stop="openModalUpdatePO(props.row.id)"
+                  >Update</q-btn
+                >
               </template>
             </template>
 
             <template v-else-if="col.name === 'due_date'">
-              <template v-if="props.row.approved_status === 1">
+              <template v-if="props.row.approved_status === 1 && props.row.po_numbers.length !== 0">
                 <span v-if="props.row.due_date">
                   {{ props.row.due_date }}
                 </span>
@@ -119,6 +125,7 @@ import { useBookingStore } from 'src/stores/booking'
 import ModalAddBooking from 'src/components/booking/ModalAddBooking.vue'
 import ModalDeleteBooking from 'src/components/booking/ModalDeleteBooking.vue'
 import ModalUpdateApproveStatus from 'src/components/booking/ModalUpdateApproveStatus.vue'
+import ModalUpdatePO from 'src/components/booking/ModalUpdatePO.vue'
 
 export default {
   name: 'BookingListPage',
@@ -149,10 +156,10 @@ export default {
         align: 'center',
       },
       {
-        name: 'po_number',
+        name: 'po_numbers',
         required: true,
-        label: 'PO Number',
-        field: 'po_number',
+        label: 'PO Numbers',
+        field: 'po_numbers',
         align: 'center',
       },
       {
@@ -300,6 +307,19 @@ export default {
       this.$q
         .dialog({
           component: ModalUpdateApproveStatus,
+          componentProps: {
+            id: id,
+          },
+        })
+        .onOk(() => {
+          this.fetchData()
+        })
+    },
+
+    openModalUpdatePO(id: string): void {
+      this.$q
+        .dialog({
+          component: ModalUpdatePO,
           componentProps: {
             id: id,
           },

@@ -76,5 +76,20 @@ export const useBookingStore = defineStore('booking', {
           })
       })
     },
+
+    updateBookingPo(payload: PayloadUpdateBookingPo): Promise<void> {
+      return new Promise((resolve, reject) => {
+        bookingService
+          .updateBookingPo(payload)
+          .then((res) => {
+            showNotificationSuccess(res.message)
+            resolve()
+          })
+          .catch((err) => {
+            showNotificationFailed(err)
+            reject(err)
+          })
+      })
+    },
   },
 })

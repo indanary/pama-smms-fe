@@ -66,4 +66,17 @@ export default {
         })
     })
   },
+
+  updateBookingPo(payload: PayloadUpdateBookingPo): Promise<ResponseUpdateBookingPo> {
+    return new Promise((resolve, reject) => {
+      api
+        .post('/booking_po', payload)
+        .then((res) => {
+          resolve({ message: res.data.message })
+        })
+        .catch((err) => {
+          reject(err.response.data.message ?? 'Unknown error')
+        })
+    })
+  },
 }
