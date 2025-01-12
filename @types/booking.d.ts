@@ -59,6 +59,39 @@ declare global {
   interface ResponseUpdateBookingPo {
     message: string
   }
+
+  interface BookingPo {
+    id: number
+    booking_id: number
+    po_number: string
+    created_at: string
+    created_by: string
+    status: string
+    notes: string
+    due_date: string
+    item_name: string
+    item_stock_code: number
+    total_qty_items: number
+    total_received_items: number
+  }
+
+  interface ParamsBookingPoList {
+    booking_id?: number
+  }
+
+  interface ResponseBookingPoList {
+    data: BookingPo[]
+  }
+
+  interface PayloadUpdateBookingPoItems {
+    booking_id: number
+    item_ids: number[]
+    po_id: number
+  }
+
+  interface ResponseUpdateBookingPoItems {
+    message: string
+  }
 }
 
 export {}

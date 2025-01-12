@@ -19,6 +19,20 @@ export const useItemStore = defineStore('item', {
       })
     },
 
+    getItemBookingList(params: ParamItemBookingList): Promise<Item[]> {
+      return new Promise((resolve, reject) => {
+        itemService
+          .itemBookingList(params)
+          .then((res) => {
+            resolve(res.data)
+          })
+          .catch((err) => {
+            showNotificationFailed(err)
+            reject(err)
+          })
+      })
+    },
+
     addItem(payload: PayloadAddItem): Promise<void> {
       return new Promise((resolve, reject) => {
         itemService

@@ -91,5 +91,34 @@ export const useBookingStore = defineStore('booking', {
           })
       })
     },
+
+    getBookingListPo(params: ParamsBookingPoList): Promise<BookingPo[]> {
+      return new Promise((resolve, reject) => {
+        bookingService
+          .bookingListPo(params)
+          .then((res) => {
+            resolve(res.data)
+          })
+          .catch((err) => {
+            showNotificationFailed(err)
+            reject(err)
+          })
+      })
+    },
+
+    updateBookingPoItems(payload: PayloadUpdateBookingPoItems): Promise<void> {
+      return new Promise((resolve, reject) => {
+        bookingService
+          .updateBookingPoItems(payload)
+          .then((res) => {
+            showNotificationSuccess(res.message)
+            resolve()
+          })
+          .catch((err) => {
+            showNotificationFailed(err)
+            reject(err)
+          })
+      })
+    },
   },
 })

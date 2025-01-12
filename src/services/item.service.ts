@@ -15,6 +15,19 @@ export default {
     })
   },
 
+  itemBookingList(params: ParamItemBookingList): Promise<ResponseItemList> {
+    return new Promise((resolve, reject) => {
+      api
+        .get(`/items/booking${buildParams(params)}`)
+        .then((res) => {
+          resolve(res)
+        })
+        .catch((err) => {
+          reject(err.response.data.message ?? 'Unknown error')
+        })
+    })
+  },
+
   addItem(payload: PayloadAddItem): Promise<ResponseAddItem> {
     return new Promise((resolve, reject) => {
       api

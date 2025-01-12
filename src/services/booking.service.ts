@@ -79,4 +79,32 @@ export default {
         })
     })
   },
+
+  bookingListPo(params: ParamsBookingPoList): Promise<ResponseBookingPoList> {
+    return new Promise((resolve, reject) => {
+      api
+        .get(`/booking_po${buildParams(params)}`)
+        .then((res) => {
+          resolve(res)
+        })
+        .catch((err) => {
+          reject(err.response.data.message ?? 'Unknown error')
+        })
+    })
+  },
+
+  updateBookingPoItems(
+    payload: PayloadUpdateBookingPoItems,
+  ): Promise<ResponseUpdateBookingPoItems> {
+    return new Promise((resolve, reject) => {
+      api
+        .put('/booking_po/po_items', payload)
+        .then((res) => {
+          resolve({ message: res.data.message })
+        })
+        .catch((err) => {
+          reject(err.response.data.message ?? 'Unknown error')
+        })
+    })
+  },
 }

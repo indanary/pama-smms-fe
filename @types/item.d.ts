@@ -18,6 +18,10 @@ declare global {
     stock_code?: string
   }
 
+  interface ParamItemBookingList {
+    booking_id: number
+  }
+
   interface ResponseItemList {
     data: Item[]
   }

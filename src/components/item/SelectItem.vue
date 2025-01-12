@@ -25,7 +25,10 @@
       <q-item v-bind="itemProps">
         <q-item-section>
           <q-item-label>
-            <div>Item Stock Code: {{ opt.stock_code }}</div>
+            <div>Stock Code: {{ opt.stock_code }}</div>
+          </q-item-label>
+          <q-item-label style="font-size: 10px; opacity: 70%">
+            <div>Item Name: {{ opt.item_name }}</div>
           </q-item-label>
         </q-item-section>
       </q-item>
