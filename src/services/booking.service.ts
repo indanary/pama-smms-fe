@@ -28,6 +28,19 @@ export default {
     })
   },
 
+  updateBooking(id: number, payload: PayloadUpdateBooking): Promise<ResponseUpdateBooking> {
+    return new Promise((resolve, reject) => {
+      api
+        .put(`/bookings/${id}`, payload)
+        .then((res) => {
+          resolve({ message: res.data.message })
+        })
+        .catch((err) => {
+          reject(err.response.data.message ?? 'Unknown error')
+        })
+    })
+  },
+
   deleteBooking(id: number): Promise<ResponseDeleteBooking> {
     return new Promise((resolve, reject) => {
       api

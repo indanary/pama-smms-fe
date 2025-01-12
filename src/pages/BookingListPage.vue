@@ -26,12 +26,16 @@
             <template v-if="col.name === 'id'"> BOOKSM{{ props.row.id }} </template>
 
             <template v-else-if="col.name === 'approved_status'">
-              <div style="display: flex; align-items: center; gap: 8px">
+              <div style="display: flex; align-items: center; justify-content: center; gap: 8px">
                 <q-icon
                   :name="props.row.approved_status === 0 ? 'close' : 'check'"
                   :color="props.row.approved_status === 0 ? 'red' : 'green'"
                 ></q-icon>
-                <q-btn v-if="props.row.approved_status === 0" color="secondary" no-caps
+                <q-btn
+                  v-if="props.row.approved_status === 0"
+                  color="secondary"
+                  no-caps
+                  @click.stop="openModalUpdateApproveStatus(props.row.id)"
                   >Update</q-btn
                 >
               </div>
@@ -42,24 +46,30 @@
             </template>
 
             <template v-else-if="col.name === 'po_number'">
-              <span v-if="props.row.po_number">
-                {{ props.row.po_number }}
-              </span>
-              <q-btn v-else color="secondary" no-caps>Update</q-btn>
+              <template v-if="props.row.approved_status === 1">
+                <span v-if="props.row.po_number">
+                  {{ props.row.po_number }}
+                </span>
+                <q-btn v-else color="secondary" no-caps>Update</q-btn>
+              </template>
             </template>
 
             <template v-else-if="col.name === 'due_date'">
-              <span v-if="props.row.due_date">
-                {{ props.row.due_date }}
-              </span>
-              <q-btn v-else color="secondary" no-caps>Update</q-btn>
+              <template v-if="props.row.approved_status === 1">
+                <span v-if="props.row.due_date">
+                  {{ props.row.due_date }}
+                </span>
+                <q-btn v-else color="secondary" no-caps>Update</q-btn>
+              </template>
             </template>
 
             <template v-else-if="col.name === 'received_date'">
-              <span v-if="props.row.received_date">
-                {{ props.row.received_date }}
-              </span>
-              <q-btn v-else color="secondary" no-caps>Update</q-btn>
+              <template v-if="props.row.approved_status === 1">
+                <span v-if="props.row.received_date">
+                  {{ props.row.received_date }}
+                </span>
+                <q-btn v-else color="secondary" no-caps>Update</q-btn>
+              </template>
             </template>
 
             <template v-else-if="col.name === 'received'">
@@ -72,13 +82,15 @@
             </template>
 
             <template v-else-if="col.name === 'wr_no'">
-              <q-btn
-                v-if="props.row.received === 1 && props.row.wr_no === ''"
-                color="secondary"
-                no-caps
-                >Create WR</q-btn
-              >
-              <span v-if="props.row.wr_no !== ''">{{ props.row.wr_no }}</span>
+              <template v-if="props.row.approved_status === 1">
+                <q-btn
+                  v-if="props.row.received === 1 && props.row.wr_no === ''"
+                  color="secondary"
+                  no-caps
+                  >Create WR</q-btn
+                >
+                <span v-if="props.row.wr_no !== ''">{{ props.row.wr_no }}</span>
+              </template>
             </template>
 
             <template v-else-if="col.name === 'action'">
@@ -106,6 +118,7 @@ import { type QTableColumn } from 'quasar'
 import { useBookingStore } from 'src/stores/booking'
 import ModalAddBooking from 'src/components/booking/ModalAddBooking.vue'
 import ModalDeleteBooking from 'src/components/booking/ModalDeleteBooking.vue'
+import ModalUpdateApproveStatus from 'src/components/booking/ModalUpdateApproveStatus.vue'
 
 export default {
   name: 'BookingListPage',
@@ -119,7 +132,7 @@ export default {
         required: true,
         label: 'Booking ID',
         field: 'id',
-        align: 'left',
+        align: 'center',
       },
       {
         name: 'approved_status',
@@ -140,77 +153,77 @@ export default {
         required: true,
         label: 'PO Number',
         field: 'po_number',
-        align: 'left',
+        align: 'center',
       },
       {
         name: 'due_date',
         required: true,
         label: 'Due Date',
         field: 'due_date',
-        align: 'left',
+        align: 'center',
       },
       {
         name: 'booking_status',
         required: true,
         label: 'Booking Status',
         field: 'booking_status',
-        align: 'left',
+        align: 'center',
       },
       {
         name: 'received_date',
         required: true,
         label: 'Received Date',
         field: 'received_date',
-        align: 'left',
+        align: 'center',
       },
       {
         name: 'received',
         required: true,
         label: 'Received',
         field: 'received',
-        align: 'left',
+        align: 'center',
       },
       {
         name: 'wr_no',
         required: true,
         label: 'WR No',
         field: 'wr_no',
-        align: 'left',
+        align: 'center',
       },
       {
         name: 'created_at',
         required: true,
         label: 'Created At',
         field: 'created_at',
-        align: 'left',
+        align: 'center',
       },
       {
         name: 'created_by',
         required: true,
         label: 'Created By',
         field: 'created_by',
-        align: 'left',
+        align: 'center',
       },
       {
         name: 'last_updated_at',
         required: true,
         label: 'Last Updated At',
         field: 'last_updated_at',
-        align: 'left',
+        align: 'center',
       },
       {
         name: 'last_updated_by',
         required: true,
         label: 'Last Updated By',
         field: 'last_updated_by',
-        align: 'left',
+        align: 'center',
       },
       {
         name: 'action',
         required: true,
         label: 'Action',
         field: 'id',
-        align: 'left',
+        align: 'center',
       },
     ]
     const tablePaginations = reactive({
@@ -274,6 +287,19 @@ export default {
       this.$q
         .dialog({
           component: ModalDeleteBooking,
+          componentProps: {
+            id: id,
+          },
+        })
+        .onOk(() => {
+          this.fetchData()
+        })
+    },
+
+    openModalUpdateApproveStatus(id: string): void {
+      this.$q
+        .dialog({
+          component: ModalUpdateApproveStatus,
           componentProps: {
             id: id,
           },

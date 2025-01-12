@@ -41,6 +41,18 @@ declare global {
   interface ResponseDetailBooking {
     data: Booking
   }
+
+  interface PayloadUpdateBooking {
+    approved_status?: number
+    po_number?: string
+    due_date?: string
+    received_date?: string
+    wr_no?: string
+  }
+
+  interface ResponseUpdateBooking {
+    message: string
+  }
 }
 
 export {}

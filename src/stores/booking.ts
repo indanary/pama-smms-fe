@@ -33,6 +33,21 @@ export const useBookingStore = defineStore('booking', {
       })
     },
 
+    updateBooking(id: number, payload: PayloadUpdateBooking): Promise<void> {
+      return new Promise((resolve, reject) => {
+        bookingService
+          .updateBooking(id, payload)
+          .then((res) => {
+            showNotificationSuccess(res.message)
+            resolve()
+          })
+          .catch((err) => {
+            showNotificationFailed(err)
+            reject(err)
+          })
+      })
+    },
+
     deleteBooking(id: number): Promise<void> {
       return new Promise((resolve, reject) => {
         bookingService
