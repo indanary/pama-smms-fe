@@ -5,6 +5,10 @@ export class ItemRules {
     return true
   }
 
+  validateFileRequired(val: object | null): boolean | string {
+    return val !== null || 'Field is required'
+  }
+
   validateStockCode(val: string): boolean | string {
     if (!val) return 'Field is required'
 

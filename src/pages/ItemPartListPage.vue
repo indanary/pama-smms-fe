@@ -1,7 +1,21 @@
 <template>
   <PageCard title="Item Part List">
     <div style="display: flex; justify-content: space-between; align-items: center">
-      <q-btn label="Add Item Part" color="primary" no-caps @click="openModalAdd"></q-btn>
+      <q-btn-dropdown label="Add Item Part" color="primary" no-caps>
+        <q-list>
+          <q-item clickable v-close-popup @click="openModalAddInput">
+            <q-item-section>
+              <q-item-label>Input Manually</q-item-label>
+            </q-item-section>
+          </q-item>
+
+          <q-item clickable v-close-popup @click="openModalAddImport">
+            <q-item-section>
+              <q-item-label>Import from File</q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-btn-dropdown>
       <SearchInput :placeholder="'Search by Part No'" @search="onSearch"></SearchInput>
     </div>
 
@@ -43,6 +57,7 @@ import { ref, reactive } from 'vue'
 import { type QTableColumn } from 'quasar'
 import { useItemStore } from 'src/stores/item'
 import ModalAddItem from 'src/components/item/ModalAddItem.vue'
+import ModalImportItem from 'src/components/item/ModalImportItem.vue'
 
 export default {
   name: 'ItemPartListPage',
@@ -166,10 +181,20 @@ export default {
         })
     },
 
-    openModalAdd(): void {
+    openModalAddInput(): void {
       this.$q
         .dialog({
           component: ModalAddItem,
+        })
+        .onOk(() => {
+          this.fetchData()
+        })
+    },
+
+    openModalAddImport(): void {
+      this.$q
+        .dialog({
+          component: ModalImportItem,
         })
         .onOk(() => {
           this.fetchData()

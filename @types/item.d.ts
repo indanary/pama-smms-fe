@@ -35,6 +35,23 @@ declare global {
   interface ResponseAddItem {
     message: string
   }
+
+  interface ExcelColumnItem {
+    stock_code: string
+    part_no: string
+    mnemonic: string
+    class: string
+    item_name: string
+    uoi: string
+  }
+
+  interface PayloadImportItem {
+    items: ExcelColumnItem[]
+  }
+
+  interface ResponseImportItem {
+    message: string
+  }
 }
 
 export {}
