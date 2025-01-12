@@ -3,7 +3,6 @@ declare global {
     id: number
     approved_status: number
     po_numbers: string[]
-    due_date: string
     booking_status: string
     description: string
     created_at: string
@@ -44,7 +43,6 @@ declare global {
 
   interface PayloadUpdateBooking {
     approved_status?: number
-    due_date?: string
     received_date?: string
     wr_no?: string
   }

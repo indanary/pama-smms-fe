@@ -26,13 +26,6 @@
         <q-btn v-else color="secondary" no-caps>Update</q-btn>
       </DetailItem>
 
-      <DetailItem label="Due Date">
-        <span v-if="detailData?.due_date">
-          {{ detailData?.due_date }}
-        </span>
-        <q-btn v-else color="secondary" no-caps>Update</q-btn>
-      </DetailItem>
-
       <DetailItem label="Booking Status">
         <span>{{ detailData?.booking_status === 'open' ? 'Open' : 'Close' }}</span>
       </DetailItem>

@@ -16,7 +16,7 @@
           </q-item>
         </q-list>
       </q-btn-dropdown>
-      <SearchInput :placeholder="'Search by Part No'" @search="onSearch"></SearchInput>
+      <SearchInput :placeholder="'Search by Stock Code'" @search="onSearch"></SearchInput>
     </div>
 
     <q-table

@@ -60,15 +60,6 @@
               </template>
             </template>
 
-            <template v-else-if="col.name === 'due_date'">
-              <template v-if="props.row.approved_status === 1 && props.row.po_numbers.length !== 0">
-                <span v-if="props.row.due_date">
-                  {{ props.row.due_date }}
-                </span>
-                <q-btn v-else color="secondary" no-caps>Update</q-btn>
-              </template>
-            </template>
-
             <template v-else-if="col.name === 'received_date'">
               <template v-if="props.row.approved_status === 1">
                 <span v-if="props.row.received_date">
@@ -160,13 +151,6 @@ export default {
         required: true,
         label: 'PO Numbers',
         field: 'po_numbers',
-        align: 'center',
-      },
-      {
-        name: 'due_date',
-        required: true,
-        label: 'Due Date',
-        field: 'due_date',
         align: 'center',
       },
       {
