@@ -92,6 +92,17 @@ declare global {
   interface ResponseUpdateBookingPoItems {
     message: string
   }
+
+  interface PayloadUpdateBookingPoDetail {
+    status?: string
+    notes?: string
+    due_date?: string
+    total_received_items?: number
+  }
+
+  interface ResponseUpdateBookingPoDetail {
+    message: string
+  }
 }
 
 export {}

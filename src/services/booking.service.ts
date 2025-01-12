@@ -107,4 +107,20 @@ export default {
         })
     })
   },
+
+  updateBookingPoDetail(
+    id: number,
+    payload: PayloadUpdateBookingPoDetail,
+  ): Promise<ResponseUpdateBookingPoDetail> {
+    return new Promise((resolve, reject) => {
+      api
+        .put(`/booking_po/${id}`, payload)
+        .then((res) => {
+          resolve({ message: res.data.message })
+        })
+        .catch((err) => {
+          reject(err.response.data.message ?? 'Unknown error')
+        })
+    })
+  },
 }

@@ -120,5 +120,20 @@ export const useBookingStore = defineStore('booking', {
           })
       })
     },
+
+    updateBookingPoDetail(id: number, payload: PayloadUpdateBookingPoDetail): Promise<void> {
+      return new Promise((resolve, reject) => {
+        bookingService
+          .updateBookingPoDetail(id, payload)
+          .then((res) => {
+            showNotificationSuccess(res.message)
+            resolve()
+          })
+          .catch((err) => {
+            showNotificationFailed(err)
+            reject(err)
+          })
+      })
+    },
   },
 })

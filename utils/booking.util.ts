@@ -10,4 +10,12 @@ export class BookingRules {
 
     return true
   }
+
+  validatePoTotal(val: number, max: number): boolean | string {
+    if (!val || val === 0) return 'Field is required'
+
+    if (val > max) return "Total received items can't be more than total qty items"
+
+    return true
+  }
 }
