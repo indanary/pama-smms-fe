@@ -21,7 +21,10 @@
 
             <template v-else-if="col.name === 'approved_status'">
               <div style="display: flex; align-items: center; gap: 8px">
-                <q-icon :name="props.row.approved_status === 0 ? 'close' : 'check'"></q-icon>
+                <q-icon
+                  :name="props.row.approved_status === 0 ? 'close' : 'check'"
+                  :color="props.row.approved_status === 0 ? 'red' : 'green'"
+                ></q-icon>
                 <q-btn v-if="props.row.approved_status === 0" color="secondary" no-caps
                   >Update</q-btn
                 >
@@ -46,7 +49,10 @@
 
             <template v-else-if="col.name === 'received'">
               <div style="display: flex; align-items: center; gap: 8px">
-                <q-icon :name="props.row.received === 0 ? 'close' : 'check'"></q-icon>
+                <q-icon
+                  :name="props.row.received === 0 ? 'close' : 'check'"
+                  :color="props.row.received === 0 ? 'red' : 'green'"
+                ></q-icon>
               </div>
             </template>
 
