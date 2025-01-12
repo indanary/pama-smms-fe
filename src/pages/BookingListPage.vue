@@ -2,7 +2,7 @@
   <PageCard title="Booking List">
     <div style="display: flex; justify-content: space-between; align-items: center">
       <q-btn label="Add Booking" color="primary" no-caps @click="openModalAdd"></q-btn>
-      <SearchInput :placeholder="'Search by Booking ID'"></SearchInput>
+      <SearchInput :placeholder="'Search by Booking ID'" @search="onSearch"></SearchInput>
     </div>
 
     <q-table
@@ -10,6 +10,7 @@
       :columns="tableColumns"
       :pagination="tablePaginations"
       :rows-per-page-options="tablePaginations.recordPerPage"
+      :loading="isLoadingFetchList"
       row-key="id"
       style="margin-top: 16px"
       table-header-style="background: var(--app-primary); color: white"
@@ -203,6 +204,7 @@ export default {
       recordPerPage: [10, 25, 50],
     })
     const isLoadingFetchList = ref(true)
+    const params: ParamBookingList = {}
 
     return {
       bookingStore,
@@ -210,6 +212,7 @@ export default {
       tableColumns,
       tablePaginations,
       isLoadingFetchList,
+      params,
     }
   },
 
@@ -226,13 +229,19 @@ export default {
       this.isLoadingFetchList = true
 
       this.bookingStore
-        .getBookingList()
+        .getBookingList(this.params)
         .then((res) => {
           this.bookingList = res
         })
         .finally(() => {
           this.isLoadingFetchList = false
         })
+    },
+
+    onSearch(val: string): void {
+      this.params.id = val
+
+      this.fetchData()
     },
 
     openModalAdd(): void {

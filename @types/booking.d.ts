@@ -16,7 +16,7 @@ declare global {
   }
 
   interface ParamBookingList {
-    search: string
+    id?: string
   }
 
   interface ResponseBookingList {

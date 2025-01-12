@@ -1,10 +1,11 @@
+import { buildParams } from 'app/utils/common.util'
 import { api } from 'src/boot/axios'
 
 export default {
-  bookingList(): Promise<ResponseBookingList> {
+  bookingList(params: ParamBookingList): Promise<ResponseBookingList> {
     return new Promise((resolve, reject) => {
       api
-        .get('/bookings')
+        .get(`/bookings${buildParams(params)}`)
         .then((res) => {
           resolve(res)
         })
