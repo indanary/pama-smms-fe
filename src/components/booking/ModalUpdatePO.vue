@@ -38,7 +38,7 @@
                   style="margin-bottom: 20px"
                 ></q-btn>
                 <q-btn
-                  v-if="index === poNumbers.length - 1"
+                  v-if="index === poNumbers.length - 1 && poNumbers.length < totalItems"
                   icon="add_circle"
                   dense
                   flat
@@ -78,6 +78,10 @@ export default {
   name: 'ModalUpdatePO',
   props: {
     id: {
+      type: Number,
+      required: true,
+    },
+    totalItems: {
       type: Number,
       required: true,
     },

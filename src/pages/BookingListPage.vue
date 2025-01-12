@@ -54,7 +54,7 @@
                   v-else
                   color="secondary"
                   no-caps
-                  @click.stop="openModalUpdatePO(props.row.id)"
+                  @click.stop="openModalUpdatePO(props.row.id, props.row.item_ids.length)"
                   >Update</q-btn
                 >
               </template>
@@ -300,12 +300,13 @@ export default {
         })
     },
 
-    openModalUpdatePO(id: string): void {
+    openModalUpdatePO(id: string, totalItems: number): void {
       this.$q
         .dialog({
           component: ModalUpdatePO,
           componentProps: {
             id: id,
+            totalItems: totalItems,
           },
         })
         .onOk(() => {
