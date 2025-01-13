@@ -52,7 +52,9 @@ export default defineConfig((/* ctx */) => {
 
       // publicPath: '/',
       // analyze: true,
-      // env: {},
+      env: {
+        VUE_APP_API_BASE_URL: process.env.VUE_APP_API_BASE_URL,
+      },
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
