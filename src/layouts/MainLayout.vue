@@ -33,7 +33,7 @@
         <q-item v-ripple="false">
           <q-item-section>
             <q-img
-              src="/src/assets/pama-logo.png"
+              src="/pama-logo.png"
               alt="Pama Logo"
               spinner-color="white"
               fit="contain"

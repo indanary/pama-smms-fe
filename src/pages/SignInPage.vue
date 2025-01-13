@@ -11,7 +11,7 @@
     <q-card style="width: 450px; padding: 24px">
       <q-card-section>
         <q-img
-          src="/src/assets/pama-logo.png"
+          src="/pama-logo.png"
           alt="Pama Logo"
           spinner-color="white"
           fit="contain"
