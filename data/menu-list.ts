@@ -15,7 +15,7 @@ export const SidebarMenuList: SidebarMenu[] = [
         permission: ['super_admin', 'admin', 'planner', 'inventory', 'purchasing', 'warehouse'],
       },
       {
-        route: '/bookings-outstanding',
+        route: '/bookings/outstanding',
         icon: 'list_alt',
         name: 'Outstanding Bookings',
         permission: ['super_admin', 'admin', 'planner', 'inventory', 'purchasing', 'warehouse'],

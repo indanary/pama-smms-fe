@@ -25,8 +25,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
-        path: '',
-        component: () => import('pages/BookingListPage.vue'),
+        path: 'outstanding',
+        component: () => import('pages/OutstandingBookingListPage.vue'),
+        meta: {
+          title: 'Outstanding Booking List',
+        },
       },
       {
         path: ':id',
@@ -34,6 +37,10 @@ const routes: RouteRecordRaw[] = [
         meta: {
           title: 'Booking Detail',
         },
+      },
+      {
+        path: '',
+        component: () => import('pages/BookingListPage.vue'),
       },
     ],
     meta: {
