@@ -12,7 +12,8 @@ declare global {
     received_date: string
     received: number
     wr_no: string
-    items: { id: number; item_name: string; qty: number; stock_code: number }[]
+    items: { id: number; item_name: string; stock_code: number }[]
+    item_ids: string[]
   }
 
   interface ParamBookingList {

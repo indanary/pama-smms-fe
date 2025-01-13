@@ -11,7 +11,6 @@ declare global {
     created_by: string
     last_updated_at: string
     last_updated_by: string
-    qty: number
   }
 
   interface ParamItemList {
@@ -33,7 +32,6 @@ declare global {
     class: string
     item_name: string
     uoi: string
-    qty: number | undefined
   }
 
   type PayloadAddItem = FormAddItem
@@ -49,7 +47,6 @@ declare global {
     class: string
     item_name: string
     uoi: string
-    qty: number
   }
 
   interface PayloadImportItem {

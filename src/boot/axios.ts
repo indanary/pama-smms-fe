@@ -9,8 +9,6 @@ declare module 'vue' {
   }
 }
 
-console.log(process.env.VUE_APP_API_BASE_URL, 'test')
-
 const apiBaseUrl = process.env.VUE_APP_API_BASE_URL || ''
 
 const api = axios.create({ baseURL: apiBaseUrl, timeout: 60000 })

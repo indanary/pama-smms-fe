@@ -109,13 +109,6 @@ export default {
         align: 'left',
       },
       {
-        name: 'qty',
-        required: true,
-        label: 'Qty',
-        field: 'qty',
-        align: 'left',
-      },
-      {
         name: 'created_at',
         required: true,
         label: 'Created At',

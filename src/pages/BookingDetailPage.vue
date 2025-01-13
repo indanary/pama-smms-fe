@@ -1,7 +1,15 @@
 <template>
   <PageCard title="Booking Detail" back-path="/bookings">
-    <template v-if="!isLoadingDetail && !isLoadingPo">
-      <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 32px">
+    <template v-if="!isLoadingDetail">
+      <div
+        style="
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          margin-top: 32px;
+          margin-bottom: 32px;
+        "
+      >
         <DetailItem label="Booking ID">
           <span>BOOKSM{{ detailData?.id }}</span>
         </DetailItem>
@@ -35,7 +43,9 @@
               v-else
               color="secondary"
               no-caps
-              @click.stop="openModalUpdatePO(detailData?.id.toString(), detailData?.items.length)"
+              @click.stop="
+                openModalUpdatePO(detailData?.id.toString(), detailData?.item_ids.length)
+              "
               >Update</q-btn
             >
           </template>
@@ -113,94 +123,29 @@
         </div>
       </div>
 
-      <q-table
-        :rows="bookingPo"
-        :columns="tableColumns"
-        :loading="isLoadingPo"
-        row-key="id"
-        style="margin-top: 32px"
-        table-header-style="background: var(--app-primary); color: white"
-      >
-        <template v-slot:body="props">
-          <q-tr :props="props">
-            <q-td v-for="col in props.cols" :key="col.name" :props="props">
-              <template v-if="col.name === 'status'">
-                <div style="display: flex; align-items: center; justify-content: start; gap: 16px">
-                  <span>{{ props.row.status === '' ? 'not complete' : props.row.status }}</span>
-                </div>
-              </template>
+      <q-tabs v-model="tab" align="left" active-bg-color="primary" active-color="white" no-caps>
+        <q-tab
+          name="booking"
+          label="List PO"
+          style="border-top-right-radius: 8px; border-top-left-radius: 8px; margin-bottom: 12px"
+        >
+        </q-tab>
+        <q-tab
+          name="items"
+          label="List Item Part"
+          style="border-top-right-radius: 8px; border-top-left-radius: 8px; margin-bottom: 12px"
+        />
+      </q-tabs>
 
-              <template v-else-if="col.name === 'due_date'">
-                <div style="display: flex; align-items: center; justify-content: start; gap: 16px">
-                  <span v-if="props.row.due_date !== ''">{{ props.row.due_date }}</span>
-                  <q-btn
-                    label="Update Due Date"
-                    no-caps
-                    color="secondary"
-                    size="sm"
-                    @click.stop="openModalUpdatePODueDate(props.row.id)"
-                  ></q-btn>
-                </div>
-              </template>
+      <q-tab-panels v-model="tab" animated>
+        <q-tab-panel name="booking" style="padding: 0">
+          <TabListPo></TabListPo>
+        </q-tab-panel>
 
-              <!-- <template v-else-if="col.name === 'notes'">
-                <div style="display: flex; align-items: center; justify-content: start; gap: 16px">
-                  <span v-if="props.row.notes !== ''">{{ props.row.notes }}</span>
-                  <q-btn label="Update Notes" no-caps color="secondary" size="sm"></q-btn>
-                </div>
-              </template> -->
-
-              <template v-else-if="col.name === 'total_received_items'">
-                <div style="display: flex; align-items: center; justify-content: start; gap: 16px">
-                  <span>{{ props.row.total_received_items }}</span>
-                  <q-btn
-                    v-if="props.row.status !== 'completed'"
-                    label="Update Total"
-                    no-caps
-                    color="secondary"
-                    size="sm"
-                    @click.stop="
-                      openModalUpdatePOTotal(
-                        props.row.id,
-                        props.row.total_qty_items,
-                        props.row.total_received_items,
-                      )
-                    "
-                  ></q-btn>
-                </div>
-              </template>
-
-              <template v-else-if="col.name === 'items'">
-                <q-btn
-                  v-if="props.row.items.length === 0"
-                  label="Choose Items"
-                  no-caps
-                  color="secondary"
-                  size="sm"
-                  @click="openModalChoosePO(props.row.po_number)"
-                ></q-btn>
-                <template v-else>
-                  <q-card
-                    v-for="(item, index) in props.row.items"
-                    :key="index"
-                    style="display: flex; flex-direction: column; align-items: start; padding: 4px"
-                    flat
-                    bordered
-                  >
-                    <span style="font-size: 10px">Stock Code: {{ item.stock_code }}</span>
-                    <span style="font-size: 10px">Item Name: {{ item.item_name }}</span>
-                    <span style="font-size: 10px">Qty: {{ item.qty }}</span>
-                  </q-card>
-                </template>
-              </template>
-
-              <template v-else>
-                <span>{{ props.row[col.name] }}</span>
-              </template>
-            </q-td>
-          </q-tr>
-        </template>
-      </q-table>
+        <q-tab-panel name="items" style="padding: 0">
+          <TabListItem></TabListItem>
+        </q-tab-panel>
+      </q-tab-panels>
     </template>
 
     <div v-else style="margin-top: 32px">
@@ -211,93 +156,36 @@
 
 <script lang="ts">
 import { ref } from 'vue'
-import { type QTableColumn } from 'quasar'
 import { useBookingStore } from 'src/stores/booking'
 import ModalUpdateApproveStatus from 'src/components/booking/ModalUpdateApproveStatus.vue'
 import ModalUpdatePO from 'src/components/booking/ModalUpdatePO.vue'
-import ModalChoosePOItem from 'src/components/booking/ModalChoosePOItem.vue'
-import ModalUpdateTotal from 'src/components/booking/ModalUpdateTotal.vue'
-import ModalUpdateDueDate from 'src/components/booking/ModalUpdateDueDate.vue'
 import ModalUpdateReceivedDate from 'src/components/booking/ModalUpdateReceivedDate.vue'
 import ModalCreateWR from 'src/components/booking/ModalCreateWR.vue'
 import ModalPublishWR from 'src/components/booking/ModalPublishWR.vue'
 import ModalDeleteBooking from 'src/components/booking/ModalDeleteBooking.vue'
+import TabListPo from 'src/components/booking/TabListPo.vue'
+import TabListItem from 'src/components/booking/TabListItem.vue'
 
 export default {
   name: 'BookingDetailPage',
+  components: { TabListPo, TabListItem },
   setup() {
     const bookingStore = useBookingStore()
 
-    const tableColumns: QTableColumn[] = [
-      {
-        name: 'po_number',
-        required: true,
-        label: 'PO Number',
-        field: 'po_number',
-        align: 'left',
-      },
-      {
-        name: 'items',
-        required: true,
-        label: 'Items',
-        field: 'items',
-        align: 'left',
-      },
-      {
-        name: 'total_qty_items',
-        required: true,
-        label: 'Total Qty Items',
-        field: 'total_qty_items',
-        align: 'left',
-      },
-      {
-        name: 'total_received_items',
-        required: true,
-        label: 'Total Received Items',
-        field: 'total_received_items',
-        align: 'left',
-      },
-      {
-        name: 'status',
-        required: true,
-        label: 'Status',
-        field: 'status',
-        align: 'left',
-      },
-      {
-        name: 'due_date',
-        required: true,
-        label: 'Due Date',
-        field: 'due_date',
-        align: 'left',
-      },
-      // {
-      //   name: 'notes',
-      //   required: true,
-      //   label: 'Notes',
-      //   field: 'notes',
-      //   align: 'left',
-      // },
-    ]
-
     const detailData = ref(null as Booking | null)
     const isLoadingDetail = ref(true)
-    const bookingPo = ref([] as BookingPo[])
-    const isLoadingPo = ref(true)
+    const tab = ref('booking')
 
     return {
       bookingStore,
-      tableColumns,
       detailData,
       isLoadingDetail,
-      bookingPo,
-      isLoadingPo,
+      tab,
     }
   },
 
   mounted() {
     this.fetchData()
-    this.fetchListPo()
   },
 
   methods: {
@@ -311,23 +199,6 @@ export default {
         })
         .finally(() => {
           this.isLoadingDetail = false
-        })
-    },
-
-    fetchListPo(): void {
-      this.isLoadingPo = true
-
-      const params: ParamsBookingPoList = {
-        booking_id: Number(this.$route.params.id),
-      }
-
-      this.bookingStore
-        .getBookingListPo(params)
-        .then((res) => {
-          this.bookingPo = res
-        })
-        .finally(() => {
-          this.isLoadingPo = false
         })
     },
 
@@ -381,51 +252,6 @@ export default {
         })
         .onOk(() => {
           this.fetchData()
-        })
-    },
-
-    openModalChoosePO(poNumber: string): void {
-      this.$q
-        .dialog({
-          component: ModalChoosePOItem,
-          componentProps: {
-            bookingId: Number(this.$route.params.id),
-            poNumber: poNumber,
-          },
-        })
-        .onOk(() => {
-          this.fetchData()
-          this.fetchListPo()
-        })
-    },
-
-    openModalUpdatePOTotal(id: number, totalItems: number, totalReceived: number): void {
-      this.$q
-        .dialog({
-          component: ModalUpdateTotal,
-          componentProps: {
-            id: id,
-            totalItems: totalItems,
-            totalReceived: totalReceived,
-          },
-        })
-        .onOk(() => {
-          this.fetchData()
-          this.fetchListPo()
-        })
-    },
-
-    openModalUpdatePODueDate(id: number): void {
-      this.$q
-        .dialog({
-          component: ModalUpdateDueDate,
-          componentProps: {
-            id: id,
-          },
-        })
-        .onOk(() => {
-          this.fetchData()
-          this.fetchListPo()
         })
     },
 

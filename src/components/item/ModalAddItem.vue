@@ -87,19 +87,6 @@
               :rules="[new ItemRules().validateRequired]"
             ></q-input>
           </div>
-
-          <div style="display: flex; flex-direction: column; gap: 8px">
-            <span class="app-input-required">Qty</span>
-            <q-input
-              v-model="formState.qty"
-              type="number"
-              filled
-              dense
-              outlined
-              placeholder="Input qty"
-              :rules="[new ItemRules().validateQty]"
-            ></q-input>
-          </div>
         </q-form>
       </q-card-section>
 
@@ -138,7 +125,6 @@ export default {
       class: '',
       item_name: '',
       uoi: '',
-      qty: undefined,
     })
     const isLoadingAdd = ref(false)
 
@@ -167,7 +153,6 @@ export default {
           class: this.formState.class,
           item_name: this.formState.item_name,
           uoi: this.formState.uoi,
-          qty: this.formState.qty ?? 0,
         }
 
         this.itemStore
