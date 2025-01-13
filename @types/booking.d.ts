@@ -12,6 +12,7 @@ declare global {
     received_date: string
     received: number
     wr_no: string
+    items: { id: number; item_name: string; qty: number; stock_code: number }[]
   }
 
   interface ParamBookingList {
@@ -45,6 +46,7 @@ declare global {
     approved_status?: number
     received_date?: string
     wr_no?: string
+    posting_wr?: number
   }
 
   interface ResponseUpdateBooking {

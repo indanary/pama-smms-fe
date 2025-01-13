@@ -42,7 +42,7 @@
             </template>
 
             <template v-else-if="col.name === 'booking_status'">
-              {{ props.row.booking_status === 'open' ? 'Open' : 'Close' }}
+              {{ props.row.booking_status === 'open' ? 'Open' : 'Closed' }}
             </template>
 
             <template v-else-if="col.name === 'po_details'">
@@ -54,28 +54,32 @@
                   v-else
                   color="secondary"
                   no-caps
-                  @click.stop="openModalUpdatePO(props.row.id, props.row.item_ids.length)"
+                  @click.stop="openModalUpdatePO(props.row.id, props.row.items.length)"
                   >Update</q-btn
                 >
               </template>
             </template>
 
             <template v-else-if="col.name === 'received_date'">
-              <template v-if="props.row.approved_status === 1">
+              <template v-if="props.row.approved_status === 1 && canUpdateReceivedDate(props.row)">
                 <span v-if="props.row.received_date">
                   {{ props.row.received_date }}
                 </span>
-                <q-btn v-else color="secondary" no-caps>Update</q-btn>
+                <q-btn
+                  v-else
+                  color="secondary"
+                  no-caps
+                  @click.stop="openModalUpdateReceived(props.row.id)"
+                  >Update</q-btn
+                >
               </template>
             </template>
 
             <template v-else-if="col.name === 'received'">
-              <div style="display: flex; align-items: center; justify-content: center; gap: 8px">
-                <q-icon
-                  :name="props.row.received === 0 ? 'close' : 'check'"
-                  :color="props.row.received === 0 ? 'red' : 'green'"
-                ></q-icon>
-              </div>
+              <q-icon
+                :name="props.row.received === 0 ? 'close' : 'check'"
+                :color="props.row.received === 0 ? 'red' : 'green'"
+              ></q-icon>
             </template>
 
             <template v-else-if="col.name === 'wr_no'">
@@ -84,10 +88,26 @@
                   v-if="props.row.received === 1 && props.row.wr_no === ''"
                   color="secondary"
                   no-caps
-                  >Create WR</q-btn
+                  @click="openModalAddWR(props.row.id)"
+                  >Add WR</q-btn
                 >
                 <span v-if="props.row.wr_no !== ''">{{ props.row.wr_no }}</span>
               </template>
+            </template>
+
+            <template v-else-if="col.name === 'posting_wr'">
+              <q-btn
+                v-if="props.row.wr_no !== '' && props.row.booking_status === 'open'"
+                color="secondary"
+                no-caps
+                @click="openModalPublishWR(props.row.id)"
+                >Posting WR No</q-btn
+              >
+              <q-icon
+                v-if="props.row.booking_status === 'closed'"
+                name="check"
+                color="green"
+              ></q-icon>
             </template>
 
             <template v-else-if="col.name === 'action'">
@@ -117,6 +137,9 @@ import ModalAddBooking from 'src/components/booking/ModalAddBooking.vue'
 import ModalDeleteBooking from 'src/components/booking/ModalDeleteBooking.vue'
 import ModalUpdateApproveStatus from 'src/components/booking/ModalUpdateApproveStatus.vue'
 import ModalUpdatePO from 'src/components/booking/ModalUpdatePO.vue'
+import ModalUpdateReceivedDate from 'src/components/booking/ModalUpdateReceivedDate.vue'
+import ModalCreateWR from 'src/components/booking/ModalCreateWR.vue'
+import ModalPublishWR from 'src/components/booking/ModalPublishWR.vue'
 
 export default {
   name: 'BookingListPage',
@@ -179,6 +202,13 @@ export default {
         required: true,
         label: 'WR No',
         field: 'wr_no',
+        align: 'center',
+      },
+      {
+        name: 'posting_wr',
+        required: true,
+        label: 'Posting WR',
+        field: 'posting_wr',
         align: 'center',
       },
       {
@@ -307,6 +337,49 @@ export default {
           componentProps: {
             id: id,
             totalItems: totalItems,
+          },
+        })
+        .onOk(() => {
+          this.fetchData()
+        })
+    },
+
+    canUpdateReceivedDate(detail: Booking): boolean {
+      return detail.po_details.every((po) => po.status === 'completed')
+    },
+
+    openModalUpdateReceived(id: number | undefined): void {
+      this.$q
+        .dialog({
+          component: ModalUpdateReceivedDate,
+          componentProps: {
+            id: id,
+          },
+        })
+        .onOk(() => {
+          this.fetchData()
+        })
+    },
+
+    openModalAddWR(id: number | undefined): void {
+      this.$q
+        .dialog({
+          component: ModalCreateWR,
+          componentProps: {
+            id: id,
+          },
+        })
+        .onOk(() => {
+          this.fetchData()
+        })
+    },
+
+    openModalPublishWR(id: number | undefined): void {
+      this.$q
+        .dialog({
+          component: ModalPublishWR,
+          componentProps: {
+            id: id,
           },
         })
         .onOk(() => {

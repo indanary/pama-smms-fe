@@ -35,22 +35,24 @@
               v-else
               color="secondary"
               no-caps
-              @click.stop="openModalUpdatePO(detailData?.id.toString())"
+              @click.stop="openModalUpdatePO(detailData?.id.toString(), detailData?.items.length)"
               >Update</q-btn
             >
           </template>
         </DetailItem>
 
         <DetailItem label="Booking Status">
-          <span>{{ detailData?.booking_status === 'open' ? 'Open' : 'Close' }}</span>
+          <span>{{ detailData?.booking_status === 'open' ? 'Open' : 'Closed' }}</span>
         </DetailItem>
 
         <DetailItem label="Received Date">
-          <template v-if="canUpdateReceivedDate()">
+          <template v-if="detailData?.approved_status === 1 && canUpdateReceivedDate()">
             <span v-if="detailData?.received_date">
               {{ detailData?.received_date }}
             </span>
-            <q-btn v-else color="secondary" no-caps>Update</q-btn>
+            <q-btn v-else color="secondary" no-caps @click="openModalUpdateReceived(detailData?.id)"
+              >Update</q-btn
+            >
           </template>
         </DetailItem>
 
@@ -62,13 +64,31 @@
         </DetailItem>
 
         <DetailItem label="WR No">
+          <template v-if="detailData?.approved_status === 1">
+            <q-btn
+              v-if="detailData?.received === 1 && detailData?.wr_no === ''"
+              color="secondary"
+              no-caps
+              @click="openModalAddWR(detailData?.id)"
+              >Add WR</q-btn
+            >
+            <span v-if="detailData?.wr_no !== ''">{{ detailData?.wr_no }}</span>
+          </template>
+        </DetailItem>
+
+        <DetailItem label="Posting WR No">
           <q-btn
-            v-if="detailData?.received === 1 && detailData?.wr_no === ''"
+            v-if="detailData?.wr_no !== '' && detailData?.booking_status === 'open'"
             color="secondary"
             no-caps
-            >Create WR</q-btn
+            @click="openModalPublishWR(detailData?.id)"
+            >Posting WR No</q-btn
           >
-          <span v-if="detailData?.wr_no !== ''">{{ detailData?.wr_no }}</span>
+          <q-icon
+            v-if="detailData?.booking_status === 'closed'"
+            name="check"
+            color="green"
+          ></q-icon>
         </DetailItem>
 
         <DetailItem label="Created At">
@@ -198,6 +218,10 @@ import ModalUpdatePO from 'src/components/booking/ModalUpdatePO.vue'
 import ModalChoosePOItem from 'src/components/booking/ModalChoosePOItem.vue'
 import ModalUpdateTotal from 'src/components/booking/ModalUpdateTotal.vue'
 import ModalUpdateDueDate from 'src/components/booking/ModalUpdateDueDate.vue'
+import ModalUpdateReceivedDate from 'src/components/booking/ModalUpdateReceivedDate.vue'
+import ModalCreateWR from 'src/components/booking/ModalCreateWR.vue'
+import ModalPublishWR from 'src/components/booking/ModalPublishWR.vue'
+import ModalDeleteBooking from 'src/components/booking/ModalDeleteBooking.vue'
 
 export default {
   name: 'BookingDetailPage',
@@ -308,7 +332,16 @@ export default {
     },
 
     openModalDelete(id: number | undefined): void {
-      console.log(id, 'id')
+      this.$q
+        .dialog({
+          component: ModalDeleteBooking,
+          componentProps: {
+            id: id,
+          },
+        })
+        .onOk(() => {
+          this.$router.push('/bookings')
+        })
     },
 
     openModalUpdateApproveStatus(id: string): void {
@@ -324,10 +357,24 @@ export default {
         })
     },
 
-    openModalUpdatePO(id: string): void {
+    openModalUpdatePO(id: string, totalItems: number): void {
       this.$q
         .dialog({
           component: ModalUpdatePO,
+          componentProps: {
+            id: id,
+            totalItems: totalItems,
+          },
+        })
+        .onOk(() => {
+          this.fetchData()
+        })
+    },
+
+    openModalUpdateReceived(id: number | undefined): void {
+      this.$q
+        .dialog({
+          component: ModalUpdateReceivedDate,
           componentProps: {
             id: id,
           },
@@ -379,6 +426,32 @@ export default {
         .onOk(() => {
           this.fetchData()
           this.fetchListPo()
+        })
+    },
+
+    openModalAddWR(id: number | undefined): void {
+      this.$q
+        .dialog({
+          component: ModalCreateWR,
+          componentProps: {
+            id: id,
+          },
+        })
+        .onOk(() => {
+          this.fetchData()
+        })
+    },
+
+    openModalPublishWR(id: number | undefined): void {
+      this.$q
+        .dialog({
+          component: ModalPublishWR,
+          componentProps: {
+            id: id,
+          },
+        })
+        .onOk(() => {
+          this.fetchData()
         })
     },
 
