@@ -40,13 +40,6 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
-        path: 'outstanding',
-        component: () => import('pages/OutstandingBookingListPage.vue'),
-        meta: {
-          title: 'Outstanding Booking List',
-        },
-      },
-      {
         path: ':id',
         component: () => import('pages/BookingDetailPage.vue'),
         meta: {
