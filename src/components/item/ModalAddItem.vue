@@ -32,6 +32,7 @@
               dense
               outlined
               placeholder="Input part no"
+              @update:model-value="convertToUppercase('part_no')"
               :rules="[new ItemRules().validateRequired]"
             ></q-input>
           </div>
@@ -45,6 +46,7 @@
               dense
               outlined
               placeholder="Input mnemonic"
+              @update:model-value="convertToUppercase('mnemonic')"
               :rules="[new ItemRules().validateRequired]"
             ></q-input>
           </div>
@@ -58,6 +60,7 @@
               dense
               outlined
               placeholder="Input class"
+              @update:model-value="convertToUppercase('class')"
               :rules="[new ItemRules().validateRequired]"
             ></q-input>
           </div>
@@ -71,6 +74,7 @@
               dense
               outlined
               placeholder="Input item name"
+              @update:model-value="convertToUppercase('item_name')"
               :rules="[new ItemRules().validateRequired]"
             ></q-input>
           </div>
@@ -84,6 +88,7 @@
               dense
               outlined
               placeholder="Input uoi"
+              @update:model-value="convertToUppercase('uoi')"
               :rules="[new ItemRules().validateRequired]"
             ></q-input>
           </div>
@@ -164,6 +169,15 @@ export default {
             this.isLoadingAdd = false
           })
       })
+    },
+
+    convertToUppercase(val: keyof FormAddItem): void {
+      const value = this.formState[val]
+      if (typeof value === 'string') {
+        this.formState[val] = value.toUpperCase() as never
+      } else if (value !== undefined && value !== null) {
+        this.formState[val] = value.toString().toUpperCase() as never
+      }
     },
   },
 }
