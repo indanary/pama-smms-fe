@@ -9,7 +9,7 @@
       </q-card-section>
 
       <q-card-section style="max-height: 60vh" class="scroll">
-        <q-form greedy ref="formRef" style="display: flex; flex-direction: column; gap: 20px">
+        <q-form greedy ref="formRef" style="display: flex; flex-direction: column; gap: 8px">
           <div style="display: flex; flex-direction: column; gap: 8px">
             <span class="app-input-required">Description</span>
             <q-input

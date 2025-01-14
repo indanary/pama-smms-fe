@@ -28,4 +28,10 @@ export const SidebarMenuList: SidebarMenu[] = [
     name: 'Item Part',
     permission: ['super_admin', 'admin', 'planner', 'inventory', 'purchasing', 'warehouse'],
   },
+  {
+    route: '/users',
+    icon: 'person',
+    name: 'User',
+    permission: ['super_admin', 'admin'],
+  },
 ]

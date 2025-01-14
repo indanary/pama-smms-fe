@@ -21,6 +21,21 @@ const routes: RouteRecordRaw[] = [
   },
 
   {
+    path: '/users',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('pages/UserListPage.vue'),
+      },
+    ],
+    meta: {
+      requireAuth: true,
+      title: 'User List',
+    },
+  },
+
+  {
     path: '/bookings',
     component: () => import('layouts/MainLayout.vue'),
     children: [
