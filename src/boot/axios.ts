@@ -1,7 +1,6 @@
 import { defineBoot } from '#q-app/wrappers'
 import axios, { type AxiosInstance } from 'axios'
 import { useTokenStore } from 'src/stores/token'
-
 declare module 'vue' {
   interface ComponentCustomProperties {
     $axios: AxiosInstance
