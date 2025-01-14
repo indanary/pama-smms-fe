@@ -22,8 +22,6 @@
     <q-table
       :rows="itemList"
       :columns="tableColumns"
-      :pagination="tablePaginations"
-      :rows-per-page-options="tablePaginations.recordPerPage"
       :loading="isLoadingFetchList"
       row-key="id"
       style="margin-top: 16px"
