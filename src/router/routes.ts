@@ -40,6 +40,13 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
+        path: 'add',
+        component: () => import('pages/AddBookingPage.vue'),
+        meta: {
+          title: 'Add Booking',
+        },
+      },
+      {
         path: ':id',
         component: () => import('pages/BookingDetailPage.vue'),
         meta: {

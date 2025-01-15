@@ -25,12 +25,21 @@ declare global {
     data: Booking[]
   }
 
-  interface FormBooking {
-    description: string
-    items: number[]
+  interface SelectedItemBooking extends Item {
+    qty: number
   }
 
-  type PayloadAddBooking = FormBooking
+  interface FormBooking {
+    description: string
+    cn_no: string
+    items: SelectedItemBooking[]
+  }
+
+  interface PayloadAddBooking {
+    description: string
+    cn_no: string
+    items: { id: number; qty: number }[]
+  }
 
   interface ResponseAddBooking {
     message: string

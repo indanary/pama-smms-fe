@@ -9,6 +9,12 @@ export const SidebarMenuList: SidebarMenu[] = [
     name: 'Booking',
     children: [
       {
+        route: '/bookings/add',
+        icon: 'list_alt',
+        name: 'Add Bookings',
+        permission: ['super_admin', 'admin', 'planner', 'inventory', 'purchasing', 'warehouse'],
+      },
+      {
         route: '/bookings',
         icon: 'list_alt',
         name: 'All Bookings',

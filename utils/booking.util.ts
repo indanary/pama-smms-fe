@@ -5,6 +5,14 @@ export class BookingRules {
     return true
   }
 
+  validateItemsQty(val: string): boolean | string {
+    if (!val) return 'Field is required'
+
+    if (isNaN(Number(val)) || Number(val) < 1) return 'Items qty only can be a positive number'
+
+    return true
+  }
+
   validateItems(val: number[]): boolean | string {
     if (!val || val.length === 0) return 'Field is required'
 

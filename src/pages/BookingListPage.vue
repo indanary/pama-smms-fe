@@ -1,7 +1,7 @@
 <template>
   <PageCard title="Booking List">
     <div style="display: flex; justify-content: space-between; align-items: center">
-      <q-btn label="Add Booking" color="primary" no-caps @click="openModalAdd"></q-btn>
+      <div></div>
       <SearchInput :placeholder="'Search by Booking ID'" @search="onSearch"></SearchInput>
     </div>
 
@@ -133,7 +133,6 @@
 import { ref, reactive } from 'vue'
 import { type QTableColumn } from 'quasar'
 import { useBookingStore } from 'src/stores/booking'
-import ModalAddBooking from 'src/components/booking/ModalAddBooking.vue'
 import ModalDeleteBooking from 'src/components/booking/ModalDeleteBooking.vue'
 import ModalUpdateApproveStatus from 'src/components/booking/ModalUpdateApproveStatus.vue'
 import ModalUpdatePO from 'src/components/booking/ModalUpdatePO.vue'
@@ -292,16 +291,6 @@ export default {
       this.params.id = val
 
       this.fetchData()
-    },
-
-    openModalAdd(): void {
-      this.$q
-        .dialog({
-          component: ModalAddBooking,
-        })
-        .onOk(() => {
-          this.fetchData()
-        })
     },
 
     openModalDelete(id: string): void {

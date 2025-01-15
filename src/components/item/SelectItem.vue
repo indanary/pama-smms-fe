@@ -6,19 +6,26 @@
     dense
     outlined
     emit-value
-    map-options
     multiple
     fill-input
     use-input
     placeholder="Choose item"
     :options="options"
-    :option-value="'id'"
-    :option-labe="'stock_code'"
     :rules="[new BookingRules().validateItems]"
+    style="width: 100%"
   >
-    <template v-slot:selected-item="{ index, opt }">
+    <template v-slot:selected-item="{ opt, toggleOption }">
       <template v-if="modelValue.length > 0">
-        {{ index === 0 ? opt.stock_code : `, ${opt.stock_code}` }}
+        <q-chip
+          dense
+          removable
+          color="gray"
+          text-color="black"
+          style="cursor: pointer"
+          @remove="toggleOption(opt)"
+        >
+          Stock Code: {{ opt.stock_code }}
+        </q-chip>
       </template>
     </template>
     <template v-slot:option="{ itemProps, opt }">
@@ -27,7 +34,10 @@
           <q-item-label>
             <div>Stock Code: {{ opt.stock_code }}</div>
           </q-item-label>
-          <q-item-label style="font-size: 10px; opacity: 70%">
+          <q-item-label style="font-size: 12px">
+            <div>Part No: {{ opt.part_no }}</div>
+          </q-item-label>
+          <q-item-label style="font-size: 12px">
             <div>Item Name: {{ opt.item_name }}</div>
           </q-item-label>
         </q-item-section>
@@ -45,14 +55,14 @@ export default {
   name: 'SelectItem',
   props: {
     modelValue: {
-      type: Object as () => number[],
+      type: Object as () => SelectedItemBooking[],
       required: true,
     },
   },
   setup() {
     const itemStore = useItemStore()
 
-    const options = ref([] as Item[])
+    const options = ref([] as SelectedItemBooking[])
 
     return {
       itemStore,
@@ -68,7 +78,10 @@ export default {
   methods: {
     fetchOptions(): void {
       this.itemStore.getItemList({}).then((res) => {
-        this.options = res
+        this.options = res.map((data) => ({
+          ...data,
+          qty: 0,
+        }))
       })
     },
   },
