@@ -4,7 +4,7 @@ import bookingService from 'src/services/booking.service'
 
 export const useBookingStore = defineStore('booking', {
   actions: {
-    getBookingList(params: ParamBookingList): Promise<Booking[]> {
+    getBookingList(params: ParamBookingList): Promise<BookingList[]> {
       return new Promise((resolve, reject) => {
         bookingService
           .bookingList(params)

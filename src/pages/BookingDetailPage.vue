@@ -36,15 +36,15 @@
 
         <DetailItem label="PO Numbers">
           <template v-if="detailData?.approved_status === 1">
-            <span v-if="detailData?.po_details.length !== 0">
-              {{ detailData?.po_details.map((p: any) => p.po_number).join(', ') }}
+            <span v-if="detailData?.po_numbers.length !== 0">
+              {{ detailData?.po_numbers.map((p: any) => p).join(', ') }}
             </span>
             <q-btn
               v-else
               color="secondary"
               no-caps
               @click.stop="
-                openModalUpdatePO(detailData?.id.toString(), detailData?.item_ids.length)
+                openModalUpdatePO(detailData?.id.toString(), detailData?.po_numbers.length)
               "
               >Update</q-btn
             >
@@ -56,7 +56,8 @@
         </DetailItem>
 
         <DetailItem label="Received Date">
-          <template v-if="detailData?.approved_status === 1 && canUpdateReceivedDate()">
+          <template v-if="detailData?.approved_status === 1">
+            <!-- <template v-if="detailData?.approved_status === 1 && canUpdateReceivedDate()"> -->
             <span v-if="detailData?.received_date">
               {{ detailData?.received_date }}
             </span>
@@ -281,11 +282,11 @@ export default {
         })
     },
 
-    canUpdateReceivedDate(): boolean {
-      if (!this.detailData) return false
+    // canUpdateReceivedDate(): boolean {
+    //   if (!this.detailData) return false
 
-      return this.detailData?.po_details.every((po) => po.status === 'completed')
-    },
+    //   return this.detailData?.po_details.every((po) => po.status === 'completed')
+    // },
   },
 }
 </script>

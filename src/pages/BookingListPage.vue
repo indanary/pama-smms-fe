@@ -2,7 +2,12 @@
   <PageCard title="Booking List">
     <div style="display: flex; justify-content: space-between; align-items: center">
       <div></div>
-      <SearchInput :placeholder="'Search by Booking ID'" @search="onSearch"></SearchInput>
+      <div style="width: 280px">
+        <SearchInput
+          :placeholder="'Search by Booking ID, PO Numbers'"
+          @search="onSearch"
+        ></SearchInput>
+      </div>
     </div>
 
     <q-table
@@ -36,7 +41,7 @@
                   color="secondary"
                   no-caps
                   @click.stop="openModalUpdateApproveStatus(props.row.id)"
-                  >Update</q-btn
+                  >Approve</q-btn
                 >
               </div>
             </template>
@@ -45,33 +50,19 @@
               {{ props.row.booking_status === 'open' ? 'Open' : 'Closed' }}
             </template>
 
-            <template v-else-if="col.name === 'po_details'">
+            <template v-else-if="col.name === 'po_numbers'">
               <template v-if="props.row.approved_status === 1">
-                <span v-if="props.row.po_details.length !== 0">
-                  {{ props.row.po_details.map((p: any) => p.po_number).join(', ') }}
+                <span>
+                  {{ props.row.po_numbers.map((p: any) => p).join(', ') }}
                 </span>
-                <q-btn
-                  v-else
-                  color="secondary"
-                  no-caps
-                  @click.stop="openModalUpdatePO(props.row.id, props.row.items.length)"
-                  >Update</q-btn
-                >
               </template>
             </template>
 
             <template v-else-if="col.name === 'received_date'">
-              <template v-if="props.row.approved_status === 1 && canUpdateReceivedDate(props.row)">
-                <span v-if="props.row.received_date">
+              <template v-if="props.row.approved_status === 1">
+                <span v-if="props.row.received_date !== ''">
                   {{ props.row.received_date }}
                 </span>
-                <q-btn
-                  v-else
-                  color="secondary"
-                  no-caps
-                  @click.stop="openModalUpdateReceived(props.row.id)"
-                  >Update</q-btn
-                >
               </template>
             </template>
 
@@ -104,15 +95,13 @@
                 >Posting WR No</q-btn
               >
               <q-icon
-                v-if="props.row.booking_status === 'closed'"
-                name="check"
-                color="green"
+                :name="props.row.posting_wr === 0 ? 'close' : 'check'"
+                :color="props.row.posting_wr === 0 ? 'red' : 'green'"
               ></q-icon>
             </template>
 
             <template v-else-if="col.name === 'action'">
               <div style="display: flex; align-items: center; gap: 8px">
-                <!-- <q-btn color="secondary" no-caps>Edit</q-btn> -->
                 <q-btn color="red" no-caps @click.stop="openModalDelete(props.row.id)"
                   >Delete</q-btn
                 >
@@ -135,8 +124,6 @@ import { type QTableColumn } from 'quasar'
 import { useBookingStore } from 'src/stores/booking'
 import ModalDeleteBooking from 'src/components/booking/ModalDeleteBooking.vue'
 import ModalUpdateApproveStatus from 'src/components/booking/ModalUpdateApproveStatus.vue'
-import ModalUpdatePO from 'src/components/booking/ModalUpdatePO.vue'
-import ModalUpdateReceivedDate from 'src/components/booking/ModalUpdateReceivedDate.vue'
 import ModalCreateWR from 'src/components/booking/ModalCreateWR.vue'
 import ModalPublishWR from 'src/components/booking/ModalPublishWR.vue'
 
@@ -145,20 +132,13 @@ export default {
   setup() {
     const bookingStore = useBookingStore()
 
-    const bookingList = ref([] as Booking[])
+    const bookingList = ref([] as BookingList[])
     const tableColumns: QTableColumn[] = [
       {
         name: 'id',
         required: true,
         label: 'Booking ID',
         field: 'id',
-        align: 'center',
-      },
-      {
-        name: 'approved_status',
-        required: true,
-        label: 'Approved Status',
-        field: 'approved_status',
         align: 'center',
       },
       {
@@ -169,10 +149,17 @@ export default {
         align: 'center',
       },
       {
-        name: 'po_details',
+        name: 'cn_no',
         required: true,
-        label: 'PO Numbers',
-        field: 'po_details',
+        label: 'CN No',
+        field: 'cn_no',
+        align: 'center',
+      },
+      {
+        name: 'approved_status',
+        required: true,
+        label: 'Approved Status',
+        field: 'approved_status',
         align: 'center',
       },
       {
@@ -180,6 +167,13 @@ export default {
         required: true,
         label: 'Booking Status',
         field: 'booking_status',
+        align: 'center',
+      },
+      {
+        name: 'po_numbers',
+        required: true,
+        label: 'PO Numbers',
+        field: 'po_numbers',
         align: 'center',
       },
       {
@@ -288,7 +282,7 @@ export default {
     },
 
     onSearch(val: string): void {
-      this.params.id = val
+      this.params.search = val
 
       this.fetchData()
     },
@@ -310,37 +304,6 @@ export default {
       this.$q
         .dialog({
           component: ModalUpdateApproveStatus,
-          componentProps: {
-            id: id,
-          },
-        })
-        .onOk(() => {
-          this.fetchData()
-        })
-    },
-
-    openModalUpdatePO(id: string, totalItems: number): void {
-      this.$q
-        .dialog({
-          component: ModalUpdatePO,
-          componentProps: {
-            id: id,
-            totalItems: totalItems,
-          },
-        })
-        .onOk(() => {
-          this.fetchData()
-        })
-    },
-
-    canUpdateReceivedDate(detail: Booking): boolean {
-      return detail.po_details.every((po) => po.status === 'completed')
-    },
-
-    openModalUpdateReceived(id: number | undefined): void {
-      this.$q
-        .dialog({
-          component: ModalUpdateReceivedDate,
           componentProps: {
             id: id,
           },

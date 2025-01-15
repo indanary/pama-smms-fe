@@ -1,28 +1,48 @@
 declare global {
-  interface Booking {
+  interface BookingList {
     id: number
-    approved_status: number
-    po_details: { status: string; po_number: string }[]
-    booking_status: string
-    description: string
+    approved_status: 0 | 1
+    booking_status: 'open' | 'closed'
     created_at: string
     created_by: string
     last_updated_at: string
     last_updated_by: string
+    description: string
     received_date: string
-    received: number
     wr_no: string
-    items: { id: number; item_name: string; stock_code: number }[]
-    item_ids: string[]
+    received: 0 | 1
+    posting_wr: 0 | 1
+    cn_no: string
+    is_removed: 0 | 1
+    remove_reason: string
+    po_numbers: string[]
+  }
+
+  interface Booking {
+    id: number
+    approved_status: 0 | 1
+    booking_status: 'open' | 'closed'
+    created_at: string
+    created_by: string
+    last_updated_at: string
+    last_updated_by: string
+    description: string
+    received_date: string
+    wr_no: string
+    received: 0 | 1
+    posting_wr: 0 | 1
+    cn_no: string
+    is_removed: 0 | 1
+    remove_reason: string
+    po_numbers: string[]
   }
 
   interface ParamBookingList {
-    id?: string
-    status?: string
+    search?: string
   }
 
   interface ResponseBookingList {
-    data: Booking[]
+    data: BookingList[]
   }
 
   interface SelectedItemBooking extends Item {
