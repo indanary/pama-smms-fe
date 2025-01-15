@@ -16,7 +16,12 @@
           </q-item>
         </q-list>
       </q-btn-dropdown>
-      <SearchInput :placeholder="'Search by Stock Code'" @search="onSearch"></SearchInput>
+      <div style="width: 324px">
+        <SearchInput
+          :placeholder="'Search by Stock Code, Part No, Item Name'"
+          @search="onSearch"
+        ></SearchInput>
+      </div>
     </div>
 
     <q-table
@@ -200,7 +205,7 @@ export default {
     },
 
     onSearch(val: string): void {
-      this.params.stock_code = val
+      this.params.search = val
 
       this.fetchData()
     },

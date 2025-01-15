@@ -10,9 +10,11 @@
     fill-input
     use-input
     placeholder="Choose item"
+    :loading="isLoadingFetch"
     :options="options"
     :rules="[new BookingRules().validateItems]"
     style="width: 100%"
+    @filter="filterFn"
   >
     <template v-slot:selected-item="{ opt, toggleOption }">
       <template v-if="modelValue.length > 0">
@@ -47,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { useItemStore } from 'src/stores/item'
 import { BookingRules } from 'app/utils/booking.util.js'
 
@@ -63,11 +65,17 @@ export default {
     const itemStore = useItemStore()
 
     const options = ref([] as SelectedItemBooking[])
+    const params = reactive<ParamItemList>({
+      search: '',
+    })
+    const isLoadingFetch = ref(true)
 
     return {
       itemStore,
       options,
       BookingRules,
+      params,
+      isLoadingFetch,
     }
   },
 
@@ -77,11 +85,29 @@ export default {
 
   methods: {
     fetchOptions(): void {
-      this.itemStore.getItemList({}).then((res) => {
-        this.options = res.map((data) => ({
-          ...data,
-          qty: 0,
-        }))
+      this.isLoadingFetch = true
+
+      this.itemStore
+        .getItemList(this.params)
+        .then((res) => {
+          this.options = res.map((data) => ({
+            ...data,
+            qty: 0,
+          }))
+        })
+        .finally(() => {
+          this.isLoadingFetch = false
+        })
+    },
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    filterFn(val: string, update: any): void {
+      update(() => {
+        const searchKeyword = val.toLowerCase()
+
+        this.params.search = searchKeyword
+
+        this.fetchOptions()
       })
     },
   },

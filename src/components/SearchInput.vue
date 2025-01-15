@@ -3,7 +3,7 @@
     v-model="searchValue"
     outlined
     dense
-    style="width: 200px"
+    style="width: 100%"
     :placeholder="placeholder"
     debounce="700"
   >

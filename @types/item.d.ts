@@ -14,7 +14,7 @@ declare global {
   }
 
   interface ParamItemList {
-    stock_code?: string
+    search?: string
   }
 
   interface ParamItemBookingList {
