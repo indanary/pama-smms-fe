@@ -311,6 +311,8 @@ export default {
     },
 
     canUpdateReceivedDate(): boolean {
+      if (this.bookingPo.length === 0) return false
+
       return this.bookingPo.every((po) => po.status === 'completed')
     },
   },
