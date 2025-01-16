@@ -42,6 +42,10 @@
           <span>{{ detailData?.booking_status === 'open' ? 'Open' : 'Closed' }}</span>
         </DetailItem>
 
+        <DetailItem label="Aging (Days)">
+          <span>{{ detailData?.aging }}</span>
+        </DetailItem>
+
         <DetailItem label="Received Date">
           <template v-if="detailData?.approved_status === 1">
             <span v-if="detailData?.received_date !== '' && canUpdateReceivedDate()">

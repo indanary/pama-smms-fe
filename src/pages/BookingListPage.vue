@@ -170,6 +170,13 @@ export default {
         align: 'center',
       },
       {
+        name: 'aging',
+        required: true,
+        label: 'Aging (Days)',
+        field: 'aging',
+        align: 'center',
+      },
+      {
         name: 'po_numbers',
         required: true,
         label: 'PO Numbers',

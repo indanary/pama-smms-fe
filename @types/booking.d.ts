@@ -16,6 +16,7 @@ declare global {
     is_removed: 0 | 1
     remove_reason: string
     po_numbers: string[]
+    aging: number
   }
 
   interface ParamBookingList {
