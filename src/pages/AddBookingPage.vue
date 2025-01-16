@@ -43,41 +43,66 @@
         class="scroll"
       >
         <span class="app-input-required">Selected Item Parts</span>
-        <div
-          v-for="(item, index) in formState.items"
-          :key="index"
-          style="display: flex; align-items: start; justify-content: space-between"
-        >
-          <q-card
-            flat
-            bordered
+
+        <template v-if="formState.items.length === 0">
+          <div
             style="
               width: 100%;
-              padding: 8px;
-              min-height: 40px;
+              height: 128px;
+              border: 4px dashed #dddddd;
+              border-radius: 4px;
               display: flex;
-              flex-direction: column;
-              gap: 4px;
+              align-items: center;
+              justify-content: center;
             "
           >
-            <div style="width: 100%; display: flex; justify-content: space-between">
-              <span style="font-weight: 500">Stock Code: {{ item.stock_code }}</span>
-              <q-btn icon="close" flat dense size="sm" @click="onRemoveSelectedItem(index)"></q-btn>
-            </div>
-            <span style="font-size: 12px">Part No: {{ item.part_no }}</span>
-            <span style="font-size: 12px">Item Name: {{ item.item_name }}</span>
-            <div style="display: flex; align-items: start; gap: 4px">
-              <span class="app-input-required" style="font-size: 12px">Item Qty: </span>
-              <q-input
-                dense
-                outlined
-                type="number"
-                v-model="item.qty"
-                :rules="[new BookingRules().validateItemsQty]"
-              ></q-input>
-            </div>
-          </q-card>
-        </div>
+            <span style="opacity: 0.5">Empty Selected Item Parts</span>
+          </div>
+        </template>
+
+        <template v-else>
+          <div
+            v-for="(item, index) in formState.items"
+            :key="index"
+            style="display: flex; align-items: start; justify-content: space-between"
+          >
+            <q-card
+              flat
+              bordered
+              style="
+                width: 100%;
+                padding: 8px;
+                min-height: 40px;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+              "
+            >
+              <div style="width: 100%; display: flex; justify-content: space-between">
+                <span style="font-weight: 500">Stock Code: {{ item.stock_code }}</span>
+                <q-btn
+                  icon="close"
+                  flat
+                  dense
+                  size="sm"
+                  @click="onRemoveSelectedItem(index)"
+                ></q-btn>
+              </div>
+              <span style="font-size: 12px">Part No: {{ item.part_no }}</span>
+              <span style="font-size: 12px">Item Name: {{ item.item_name }}</span>
+              <div style="display: flex; align-items: start; gap: 4px">
+                <span class="app-input-required" style="font-size: 12px">Item Qty: </span>
+                <q-input
+                  dense
+                  outlined
+                  type="number"
+                  v-model="item.qty"
+                  :rules="[new BookingRules().validateItemsQty]"
+                ></q-input>
+              </div>
+            </q-card>
+          </div>
+        </template>
       </div>
     </q-form>
 
