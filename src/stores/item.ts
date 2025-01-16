@@ -5,12 +5,12 @@ import itemService from 'src/services/item.service'
 
 export const useItemStore = defineStore('item', {
   actions: {
-    getItemList(params: ParamItemList): Promise<Item[]> {
+    getItemList(params: ParamItemList): Promise<ResponseItemList> {
       return new Promise((resolve, reject) => {
         itemService
           .itemList(params)
           .then((res) => {
-            resolve(res.data)
+            resolve(res)
           })
           .catch((err) => {
             showNotificationFailed(err)

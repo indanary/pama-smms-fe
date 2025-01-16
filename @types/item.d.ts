@@ -15,6 +15,8 @@ declare global {
 
   interface ParamItemList {
     search?: string
+    page?: number
+    limit?: number
   }
 
   interface ParamItemBookingList {
@@ -24,6 +26,10 @@ declare global {
 
   interface ResponseItemList {
     data: Item[]
+    limit: number
+    page: number
+    totalItems: number
+    totalPages: number
   }
 
   interface FormAddItem {

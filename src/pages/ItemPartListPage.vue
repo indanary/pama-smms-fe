@@ -28,30 +28,25 @@
       :rows="itemList"
       :columns="tableColumns"
       :loading="isLoadingFetchList"
+      :pagination="tablePaginations"
+      :rows-per-page-options="tablePaginations.recordPerPage"
       row-key="id"
       style="margin-top: 16px"
       table-header-style="background: var(--app-primary); color: white"
+      flat
+      @request="onRequest"
     >
-      <!-- <template v-slot:body="props">
-        <q-tr :props="props" style="cursor: pointer">
-          <q-td v-for="col in props.cols" :key="col.name" :props="props">
-            <template v-if="col.name === 'action'">
-              <div style="display: flex; align-items: center; gap: 8px">
-                <q-btn color="secondary" no-caps>Edit</q-btn>
-                <q-btn color="red" no-caps>Delete</q-btn>
-              </div>
-            </template>
-            <template v-else>
-              <span>{{ props.row[col.name] }}</span>
-            </template>
-          </q-td>
-        </q-tr>
-      </template> -->
     </q-table>
-
-    <!-- <div v-else style="margin-top: 16px">
-      <SkeletonLoader :num="6"></SkeletonLoader>
-    </div> -->
+    <div style="display: flex; justify-content: start">
+      <q-pagination
+        v-model="tablePaginations.page"
+        :max="tablePaginations.rowsNumber"
+        :max-pages="6"
+        boundary-numbers
+        size="12px"
+        @update:model-value="onPagePagination"
+      />
+    </div>
   </PageCard>
 </template>
 
@@ -149,12 +144,15 @@ export default {
     ]
     const tablePaginations = reactive({
       page: 1,
-      rowsPerPage: 25,
+      rowsPerPage: 10,
       rowsNumber: 0,
       recordPerPage: [10, 25, 50],
     })
     const isLoadingFetchList = ref(true)
-    const params: ParamItemList = {}
+    const params: ParamItemList = reactive({
+      page: tablePaginations.page,
+      limit: tablePaginations.rowsPerPage,
+    })
 
     return {
       itemStore,
@@ -177,11 +175,34 @@ export default {
       this.itemStore
         .getItemList(this.params)
         .then((res) => {
-          this.itemList = res
+          this.itemList = res.data
+
+          this.tablePaginations.page = res.page
+          this.tablePaginations.rowsPerPage = res.limit
+          this.tablePaginations.rowsNumber = res.totalPages
         })
         .finally(() => {
           this.isLoadingFetchList = false
         })
+    },
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onRequest(props: any): void {
+      this.tablePaginations.page = 1
+      this.tablePaginations.rowsPerPage = props.pagination.rowsPerPage
+
+      this.params.page = 1
+      this.params.limit = props.pagination.rowsPerPage
+
+      this.fetchData()
+    },
+
+    onPagePagination(page: number): void {
+      this.tablePaginations.page = page
+
+      this.params.page = page
+
+      this.fetchData()
     },
 
     openModalAddInput(): void {

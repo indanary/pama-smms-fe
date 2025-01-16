@@ -7,7 +7,7 @@ export default {
       api
         .get(`/items${buildParams(params)}`)
         .then((res) => {
-          resolve(res)
+          resolve(res.data)
         })
         .catch((err) => {
           reject(err.response.data.message ?? 'Unknown error')

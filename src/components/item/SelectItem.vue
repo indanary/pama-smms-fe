@@ -67,6 +67,7 @@ export default {
     const options = ref([] as SelectedItemBooking[])
     const params = reactive<ParamItemList>({
       search: '',
+      limit: 25,
     })
     const isLoadingFetch = ref(true)
 
@@ -90,7 +91,7 @@ export default {
       this.itemStore
         .getItemList(this.params)
         .then((res) => {
-          this.options = res.map((data) => ({
+          this.options = res.data.map((data) => ({
             ...data,
             qty: 0,
           }))
