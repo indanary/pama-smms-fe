@@ -46,6 +46,10 @@ declare global {
     message: string
   }
 
+  interface PayloadDeleteBooking {
+    remove_reason: string
+  }
+
   interface ResponseDeleteBooking {
     message: string
   }

@@ -41,10 +41,10 @@ export default {
     })
   },
 
-  deleteBooking(id: number): Promise<ResponseDeleteBooking> {
+  deleteBooking(id: number, payload: PayloadDeleteBooking): Promise<ResponseDeleteBooking> {
     return new Promise((resolve, reject) => {
       api
-        .delete(`/bookings/${id}`)
+        .put(`/bookings/${id}/delete`, payload)
         .then((res) => {
           resolve({ message: res.data.message })
         })

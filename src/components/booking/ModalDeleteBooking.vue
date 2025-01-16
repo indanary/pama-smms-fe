@@ -8,8 +8,28 @@
         </div>
       </q-card-section>
 
-      <q-card-section>
-        <span>Are you sure want to delete this booking?</span>
+      <q-card-section style="max-height: 60vh" class="scroll">
+        <span style="font-size: 16px; font-weight: 500"
+          >Are you sure you want to delete this booking?</span
+        >
+        <q-form
+          greedy
+          ref="formRef"
+          style="display: flex; flex-direction: column; gap: 8px; margin-top: 16px"
+        >
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <span class="app-input-required">Delete Reason</span>
+            <q-input
+              v-model="formState.remove_reason"
+              type="textarea"
+              filled
+              dense
+              outlined
+              placeholder="Input delete reason"
+              :rules="[new BookingRules().validateRequired]"
+            ></q-input>
+          </div>
+        </q-form>
       </q-card-section>
 
       <q-card-section>
@@ -23,8 +43,10 @@
 </template>
 
 <script lang="ts">
-import { useDialogPluginComponent } from 'quasar'
+import { useDialogPluginComponent, type QForm } from 'quasar'
+import { reactive, ref } from 'vue'
 import { useBookingStore } from 'src/stores/booking'
+import { BookingRules } from 'app/utils/booking.util.js'
 
 export default {
   name: 'ModalDeleteBooking',
@@ -38,17 +60,40 @@ export default {
     const { dialogRef, onDialogCancel, onDialogOK } = useDialogPluginComponent()
     const bookingStore = useBookingStore()
 
+    const formState = reactive({
+      remove_reason: '',
+    })
+    const isLoadingDelete = ref(false)
+
     return {
       dialogRef,
       onDialogCancel,
       onDialogOK,
       bookingStore,
+      BookingRules,
+      formState,
+      isLoadingDelete,
     }
   },
   methods: {
     onDeleteBooking(): void {
-      this.bookingStore.deleteBooking(this.id).then(() => {
-        this.onDialogOK()
+      ;(this.$refs.formRef as QForm).validate().then((isValid) => {
+        if (!isValid) return
+
+        this.isLoadingDelete = true
+
+        const payload: PayloadDeleteBooking = {
+          remove_reason: this.formState.remove_reason,
+        }
+
+        this.bookingStore
+          .deleteBooking(this.id, payload)
+          .then(() => {
+            this.onDialogOK()
+          })
+          .finally(() => {
+            this.isLoadingDelete = false
+          })
       })
     },
   },

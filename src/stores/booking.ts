@@ -48,10 +48,10 @@ export const useBookingStore = defineStore('booking', {
       })
     },
 
-    deleteBooking(id: number): Promise<void> {
+    deleteBooking(id: number, payload: PayloadDeleteBooking): Promise<void> {
       return new Promise((resolve, reject) => {
         bookingService
-          .deleteBooking(id)
+          .deleteBooking(id, payload)
           .then((res) => {
             showNotificationSuccess(res.message)
             resolve()
