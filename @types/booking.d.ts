@@ -21,10 +21,16 @@ declare global {
 
   interface ParamBookingList {
     search?: string
+    page?: number
+    limit?: number
   }
 
   interface ResponseBookingList {
     data: Booking[]
+    limit: number
+    page: number
+    totalItems: number
+    totalPages: number
   }
 
   interface SelectedItemBooking extends Item {

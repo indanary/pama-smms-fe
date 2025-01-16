@@ -4,12 +4,12 @@ import bookingService from 'src/services/booking.service'
 
 export const useBookingStore = defineStore('booking', {
   actions: {
-    getBookingList(params: ParamBookingList): Promise<Booking[]> {
+    getBookingList(params: ParamBookingList): Promise<ResponseBookingList> {
       return new Promise((resolve, reject) => {
         bookingService
           .bookingList(params)
           .then((res) => {
-            resolve(res.data)
+            resolve(res)
           })
           .catch((err) => {
             showNotificationFailed(err)
