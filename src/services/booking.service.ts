@@ -67,10 +67,10 @@ export default {
     })
   },
 
-  updateBookingPo(payload: PayloadUpdateBookingPo): Promise<ResponseUpdateBookingPo> {
+  updateBookingPo(id: number, payload: PayloadUpdateBookingPo): Promise<ResponseUpdateBookingPo> {
     return new Promise((resolve, reject) => {
       api
-        .post('/booking_po', payload)
+        .put(`/bookings/${id}/po`, payload)
         .then((res) => {
           resolve({ message: res.data.message })
         })
@@ -80,10 +80,10 @@ export default {
     })
   },
 
-  bookingListPo(params: ParamsBookingPoList): Promise<ResponseBookingPoList> {
+  listBookingPo(id: number): Promise<ResponseBookingPoList> {
     return new Promise((resolve, reject) => {
       api
-        .get(`/booking_po${buildParams(params)}`)
+        .get(`/bookings/${id}/po`)
         .then((res) => {
           resolve(res)
         })
@@ -98,7 +98,7 @@ export default {
   ): Promise<ResponseUpdateBookingPoItems> {
     return new Promise((resolve, reject) => {
       api
-        .put('/booking_po/po_items', payload)
+        .put('/pos/items', payload)
         .then((res) => {
           resolve({ message: res.data.message })
         })
@@ -114,7 +114,7 @@ export default {
   ): Promise<ResponseUpdateBookingPoDetail> {
     return new Promise((resolve, reject) => {
       api
-        .put(`/booking_po/${id}`, payload)
+        .put(`/pos/${id}`, payload)
         .then((res) => {
           resolve({ message: res.data.message })
         })

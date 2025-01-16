@@ -1,6 +1,6 @@
 <template>
-  <q-dialog persistent ref="dialogRef">
-    <q-card style="width: 1000px">
+  <q-dialog persistent ref="dialogRef" full-width>
+    <q-card style="width: 800px !important">
       <q-card-section>
         <div style="display: flex; justify-content: space-between; align-items: center">
           <span style="font-size: 18px; font-weight: 500">Modal Choose PO Items </span>
@@ -11,41 +11,99 @@
       <q-card-section style="max-height: 60vh" class="scroll">
         <q-form greedy ref="formRef" style="display: flex; flex-direction: column; gap: 20px">
           <div style="display: flex; flex-direction: column; gap: 8px">
-            <span class="app-input-required">Items</span>
-            <q-select
-              v-model="selectedItem"
-              filled
-              dense
-              outlined
-              emit-value
-              map-options
-              multiple
-              fill-input
-              use-input
-              placeholder="Choose item"
-              :options="itemBookingList"
-              :option-value="'id'"
-              :option-labe="'stock_code'"
-              :rules="[new BookingRules().validateItems]"
-            >
-              <template v-slot:selected-item="{ index, opt }">
-                <template v-if="selectedItem.length > 0">
-                  {{ index === 0 ? opt.stock_code : `, ${opt.stock_code}` }}
-                </template>
-              </template>
-              <template v-slot:option="{ itemProps, opt }">
-                <q-item v-bind="itemProps">
-                  <q-item-section>
-                    <q-item-label>
-                      <div>Stock Code: {{ opt.stock_code }}</div>
-                    </q-item-label>
-                    <q-item-label style="font-size: 10px; opacity: 70%">
-                      <div>Item Name: {{ opt.item_name }}</div>
-                    </q-item-label>
-                  </q-item-section>
-                </q-item>
-              </template>
-            </q-select>
+            <span class="app-input-required">Item Parts</span>
+            <div style="display: flex; align-items: start; gap: 8px">
+              <div style="width: 50%">
+                <q-select
+                  v-model="selectedItem"
+                  filled
+                  dense
+                  outlined
+                  emit-value
+                  multiple
+                  fill-input
+                  use-input
+                  placeholder="Choose item"
+                  :options="itemBookingList"
+                  :rules="[new BookingRules().validateItems]"
+                  @filter="filterFn"
+                >
+                  <template v-slot:selected-item="{ opt, toggleOption }">
+                    <template v-if="selectedItem.length > 0">
+                      <q-chip
+                        dense
+                        removable
+                        color="gray"
+                        text-color="black"
+                        style="cursor: pointer"
+                        @remove="toggleOption(opt)"
+                      >
+                        Stock Code: {{ opt.stock_code }}
+                      </q-chip>
+                    </template>
+                  </template>
+                  <template v-slot:option="{ itemProps, opt }">
+                    <q-item v-bind="itemProps">
+                      <q-item-section>
+                        <q-item-label>
+                          <div>Stock Code: {{ opt.stock_code }}</div>
+                        </q-item-label>
+                        <q-item-label style="font-size: 12px">
+                          <div>Part No: {{ opt.part_no }}</div>
+                        </q-item-label>
+                        <q-item-label style="font-size: 12px">
+                          <div>Item Name: {{ opt.item_name }}</div>
+                        </q-item-label>
+                      </q-item-section>
+                    </q-item>
+                  </template>
+                </q-select>
+              </div>
+
+              <div
+                style="
+                  width: 50%;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 8px;
+                  max-height: 60vh;
+                "
+                class="scroll"
+              >
+                <div
+                  v-for="(item, index) in selectedItem"
+                  :key="index"
+                  style="display: flex; align-items: start; justify-content: space-between"
+                >
+                  <q-card
+                    flat
+                    bordered
+                    style="
+                      width: 100%;
+                      padding: 8px;
+                      min-height: 40px;
+                      display: flex;
+                      flex-direction: column;
+                      gap: 4px;
+                    "
+                  >
+                    <div style="width: 100%; display: flex; justify-content: space-between">
+                      <span style="font-weight: 500">Stock Code: {{ item.stock_code }}</span>
+                      <q-btn
+                        icon="close"
+                        flat
+                        dense
+                        size="sm"
+                        @click="onRemoveSelectedItem(index)"
+                      ></q-btn>
+                    </div>
+                    <span style="font-size: 12px">Part No: {{ item.part_no }}</span>
+                    <span style="font-size: 12px">Item Name: {{ item.item_name }}</span>
+                    <span style="font-size: 12px">Item QTY: {{ item.item_qty }}</span>
+                  </q-card>
+                </div>
+              </div>
+            </div>
           </div>
         </q-form>
       </q-card-section>
@@ -68,7 +126,7 @@
 
 <script lang="ts">
 import { useDialogPluginComponent, type QForm } from 'quasar'
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { useItemStore } from 'src/stores/item'
 import { BookingRules } from 'app/utils/booking.util.js'
 import { useBookingStore } from 'src/stores/booking'
@@ -92,8 +150,12 @@ export default {
 
     const isLoadingFetch = ref(true)
     const isLoadingSave = ref(false)
-    const itemBookingList = ref([] as Item[])
-    const selectedItem = ref([] as number[])
+    const itemBookingList = ref([] as ItemBooking[])
+    const selectedItem = ref([] as ItemBooking[])
+    const params = reactive<ParamItemBookingList>({
+      search: '',
+      options: 1,
+    })
 
     return {
       dialogRef,
@@ -106,6 +168,7 @@ export default {
       itemBookingList,
       selectedItem,
       BookingRules,
+      params,
     }
   },
   mounted() {
@@ -115,18 +178,29 @@ export default {
     fetchData(): void {
       this.isLoadingFetch = true
 
-      const params: ParamItemBookingList = {
-        booking_id: this.bookingId,
-      }
-
       this.itemStore
-        .getItemBookingList(params)
+        .getItemBookingList(Number(this.$route.params.id as string), this.params)
         .then((res) => {
           this.itemBookingList = res
         })
         .finally(() => {
           this.isLoadingFetch = false
         })
+    },
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    filterFn(val: string, update: any): void {
+      update(() => {
+        const searchKeyword = val.toLowerCase()
+
+        this.params.search = searchKeyword
+
+        this.fetchData()
+      })
+    },
+
+    onRemoveSelectedItem(index: number): void {
+      this.selectedItem = [...this.selectedItem.filter((_, idx) => idx !== index)]
     },
 
     onSave(): void {
@@ -136,8 +210,7 @@ export default {
         this.isLoadingSave = true
 
         const payload: PayloadUpdateBookingPoItems = {
-          booking_id: this.bookingId,
-          item_ids: this.selectedItem,
+          item_ids: this.selectedItem.map((item) => item.id),
           po_number: this.poNumber,
         }
 

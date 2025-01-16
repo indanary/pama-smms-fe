@@ -1,23 +1,4 @@
 declare global {
-  interface BookingList {
-    id: number
-    approved_status: 0 | 1
-    booking_status: 'open' | 'closed'
-    created_at: string
-    created_by: string
-    last_updated_at: string
-    last_updated_by: string
-    description: string
-    received_date: string
-    wr_no: string
-    received: 0 | 1
-    posting_wr: 0 | 1
-    cn_no: string
-    is_removed: 0 | 1
-    remove_reason: string
-    po_numbers: string[]
-  }
-
   interface Booking {
     id: number
     approved_status: 0 | 1
@@ -42,7 +23,7 @@ declare global {
   }
 
   interface ResponseBookingList {
-    data: BookingList[]
+    data: Booking[]
   }
 
   interface SelectedItemBooking extends Item {
@@ -85,7 +66,6 @@ declare global {
   }
 
   interface PayloadUpdateBookingPo {
-    booking_id: number
     po_numbers: string[]
   }
 
@@ -100,16 +80,16 @@ declare global {
     created_at: string
     created_by: string
     status: string
-    notes: string
     due_date: string
-    item_name: string
-    item_stock_code: number
     total_qty_items: number
     total_received_items: number
-  }
-
-  interface ParamsBookingPoList {
-    booking_id?: number
+    items: {
+      id: number
+      item_name: string
+      item_qty: number
+      part_no: string
+      stock_code: 3
+    }[]
   }
 
   interface ResponseBookingPoList {
@@ -117,7 +97,6 @@ declare global {
   }
 
   interface PayloadUpdateBookingPoItems {
-    booking_id: number
     item_ids: number[]
     po_number: string
   }
@@ -128,7 +107,6 @@ declare global {
 
   interface PayloadUpdateBookingPoDetail {
     status?: string
-    notes?: string
     due_date?: string
     total_received_items?: number
   }

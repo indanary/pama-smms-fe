@@ -4,7 +4,7 @@
   <q-table
     :rows="itemBookingList"
     :columns="tableColumns"
-    :loading="isLoadingFetch"
+    :loading="isLoadingItem"
     row-key="id"
     table-header-style="background: var(--app-primary); color: white"
     style="margin-top: 12px"
@@ -13,14 +13,20 @@
 
 <script lang="ts">
 import { type QTableColumn } from 'quasar'
-import { useItemStore } from 'src/stores/item'
-import { ref } from 'vue'
 
 export default {
   name: 'TabListItem',
+  props: {
+    itemBookingList: {
+      type: Object as () => ItemBooking[],
+      required: true,
+    },
+    isLoadingItem: {
+      type: Boolean,
+      required: true,
+    },
+  },
   setup() {
-    const itemStore = useItemStore()
-
     const tableColumns: QTableColumn[] = [
       {
         name: 'stock_code',
@@ -65,10 +71,10 @@ export default {
         align: 'left',
       },
       {
-        name: 'qty',
+        name: 'item_qty',
         required: true,
         label: 'Qty',
-        field: 'qty',
+        field: 'item_qty',
         align: 'left',
       },
       {
@@ -87,36 +93,9 @@ export default {
       },
     ]
 
-    const itemBookingList = ref([] as Item[])
-    const isLoadingFetch = ref(true)
-
     return {
-      itemStore,
       tableColumns,
-      itemBookingList,
-      isLoadingFetch,
     }
-  },
-  mounted() {
-    this.fetchData()
-  },
-  methods: {
-    fetchData(): void {
-      this.isLoadingFetch = true
-
-      const params: ParamItemBookingList = {
-        booking_id: Number(this.$route.params.id as string),
-      }
-
-      this.itemStore
-        .getItemBookingList(params)
-        .then((res) => {
-          this.itemBookingList = res
-        })
-        .finally(() => {
-          this.isLoadingFetch = false
-        })
-    },
   },
 }
 </script>

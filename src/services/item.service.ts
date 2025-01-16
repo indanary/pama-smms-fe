@@ -15,10 +15,10 @@ export default {
     })
   },
 
-  itemBookingList(params: ParamItemBookingList): Promise<ResponseItemList> {
+  itemBookingList(id: number, params: ParamItemBookingList): Promise<ResponseItemBookingList> {
     return new Promise((resolve, reject) => {
       api
-        .get(`/items/booking${buildParams(params)}`)
+        .get(`/items/${id}/booking${buildParams(params)}`)
         .then((res) => {
           resolve(res)
         })

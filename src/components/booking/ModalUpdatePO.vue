@@ -3,7 +3,7 @@
     <q-card style="width: 1000px">
       <q-card-section>
         <div style="display: flex; justify-content: space-between; align-items: center">
-          <span style="font-size: 18px; font-weight: 500">Modal Update PO Number </span>
+          <span style="font-size: 18px; font-weight: 500">Modal Add PO Number </span>
           <q-btn icon="close" size="sm" dense @click="onDialogCancel"></q-btn>
         </div>
       </q-card-section>
@@ -26,6 +26,7 @@
                   outlined
                   placeholder="Input PO Number"
                   style="width: 300px"
+                  @update:model-value="convertToUppercase(index)"
                   :rules="[new BookingRules().validateRequired]"
                 ></q-input>
                 <q-btn
@@ -57,7 +58,7 @@
           <q-btn no-caps label="Cancel" @click="onDialogCancel" :disable="isLoadingUpdate"></q-btn>
           <q-btn
             no-caps
-            label="Update"
+            label="Add"
             color="primary"
             @click="onUpdate"
             :loading="isLoadingUpdate"
@@ -112,12 +113,11 @@ export default {
         this.isLoadingUpdate = true
 
         const payload: PayloadUpdateBookingPo = {
-          booking_id: this.id,
           po_numbers: this.poNumbers,
         }
 
         this.bookingStore
-          .updateBookingPo(payload)
+          .updateBookingPo(this.id, payload)
           .then(() => {
             this.onDialogOK()
           })
@@ -133,6 +133,16 @@ export default {
 
     addPo(): void {
       this.poNumbers.push('')
+    },
+
+    convertToUppercase(index: number): void {
+      const val = this.poNumbers[index] ?? ''
+
+      if (typeof val === 'string') {
+        this.poNumbers[index] = val.toUpperCase()
+      } else if (val !== undefined && val !== null) {
+        this.poNumbers[index] = (val as string).toString().toUpperCase()
+      }
     },
   },
 }

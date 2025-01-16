@@ -14,8 +14,16 @@
           <span>BOOKSM{{ detailData?.id }}</span>
         </DetailItem>
 
+        <DetailItem label="Description">
+          <span>{{ detailData?.description }}</span>
+        </DetailItem>
+
+        <DetailItem label="CN No">
+          <span>{{ detailData?.cn_no }}</span>
+        </DetailItem>
+
         <DetailItem label="Approved Status">
-          <div style="display: flex; align-items: left; gap: 8px">
+          <div style="display: flex; align-items: center; gap: 8px">
             <q-icon
               :name="detailData?.approved_status === 0 ? 'close' : 'check'"
               :color="detailData?.approved_status === 0 ? 'red' : 'green'"
@@ -25,30 +33,9 @@
               color="secondary"
               no-caps
               @click="openModalUpdateApproveStatus(detailData?.id.toString())"
-              >Update</q-btn
+              >Approve</q-btn
             >
           </div>
-        </DetailItem>
-
-        <DetailItem label="Description">
-          <span>{{ detailData?.description }}</span>
-        </DetailItem>
-
-        <DetailItem label="PO Numbers">
-          <template v-if="detailData?.approved_status === 1">
-            <span v-if="detailData?.po_numbers.length !== 0">
-              {{ detailData?.po_numbers.map((p: any) => p).join(', ') }}
-            </span>
-            <q-btn
-              v-else
-              color="secondary"
-              no-caps
-              @click.stop="
-                openModalUpdatePO(detailData?.id.toString(), detailData?.po_numbers.length)
-              "
-              >Update</q-btn
-            >
-          </template>
         </DetailItem>
 
         <DetailItem label="Booking Status">
@@ -57,8 +44,7 @@
 
         <DetailItem label="Received Date">
           <template v-if="detailData?.approved_status === 1">
-            <!-- <template v-if="detailData?.approved_status === 1 && canUpdateReceivedDate()"> -->
-            <span v-if="detailData?.received_date">
+            <span v-if="detailData?.received_date !== '' && canUpdateReceivedDate()">
               {{ detailData?.received_date }}
             </span>
             <q-btn v-else color="secondary" no-caps @click="openModalUpdateReceived(detailData?.id)"
@@ -81,7 +67,7 @@
               color="secondary"
               no-caps
               @click="openModalAddWR(detailData?.id)"
-              >Add WR</q-btn
+              >Create WR No</q-btn
             >
             <span v-if="detailData?.wr_no !== ''">{{ detailData?.wr_no }}</span>
           </template>
@@ -127,24 +113,32 @@
       <q-tabs v-model="tab" align="left" active-bg-color="primary" active-color="white" no-caps>
         <q-tab
           name="booking"
-          label="List PO"
+          label="List PO Numbers"
           style="border-top-right-radius: 8px; border-top-left-radius: 8px; margin-bottom: 12px"
         >
         </q-tab>
         <q-tab
           name="items"
-          label="List Item Part"
+          label="List Item Parts"
           style="border-top-right-radius: 8px; border-top-left-radius: 8px; margin-bottom: 12px"
         />
       </q-tabs>
 
       <q-tab-panels v-model="tab" animated>
         <q-tab-panel name="booking" style="padding: 0">
-          <TabListPo></TabListPo>
+          <TabListPo
+            :booking-po="bookingPo"
+            :is-loading-po="isLoadingPo"
+            :total-items="itemBookingList.length"
+            @refresh="fetchListPo"
+          ></TabListPo>
         </q-tab-panel>
 
         <q-tab-panel name="items" style="padding: 0">
-          <TabListItem></TabListItem>
+          <TabListItem
+            :item-booking-list="itemBookingList"
+            :is-loading-item="isLoadingItem"
+          ></TabListItem>
         </q-tab-panel>
       </q-tab-panels>
     </template>
@@ -158,8 +152,9 @@
 <script lang="ts">
 import { ref } from 'vue'
 import { useBookingStore } from 'src/stores/booking'
+import { useItemStore } from 'src/stores/item'
+
 import ModalUpdateApproveStatus from 'src/components/booking/ModalUpdateApproveStatus.vue'
-import ModalUpdatePO from 'src/components/booking/ModalUpdatePO.vue'
 import ModalUpdateReceivedDate from 'src/components/booking/ModalUpdateReceivedDate.vue'
 import ModalCreateWR from 'src/components/booking/ModalCreateWR.vue'
 import ModalPublishWR from 'src/components/booking/ModalPublishWR.vue'
@@ -172,21 +167,36 @@ export default {
   components: { TabListPo, TabListItem },
   setup() {
     const bookingStore = useBookingStore()
+    const itemStore = useItemStore()
+
+    const tab = ref('booking')
 
     const detailData = ref(null as Booking | null)
     const isLoadingDetail = ref(true)
-    const tab = ref('booking')
+
+    const bookingPo = ref([] as BookingPo[])
+    const isLoadingPo = ref(true)
+
+    const itemBookingList = ref([] as ItemBooking[])
+    const isLoadingItem = ref(true)
 
     return {
       bookingStore,
+      itemStore,
       detailData,
       isLoadingDetail,
       tab,
+      isLoadingPo,
+      bookingPo,
+      itemBookingList,
+      isLoadingItem,
     }
   },
 
   mounted() {
     this.fetchData()
+    this.fetchListPo()
+    this.fetchListItem()
   },
 
   methods: {
@@ -200,6 +210,34 @@ export default {
         })
         .finally(() => {
           this.isLoadingDetail = false
+        })
+    },
+
+    fetchListPo(): void {
+      this.isLoadingPo = true
+
+      this.bookingStore
+        .getListBookingPo(Number(this.$route.params.id))
+        .then((res) => {
+          this.bookingPo = res
+        })
+        .finally(() => {
+          this.isLoadingPo = false
+        })
+    },
+
+    fetchListItem(): void {
+      this.isLoadingItem = true
+
+      const params: ParamItemBookingList = {}
+
+      this.itemStore
+        .getItemBookingList(Number(this.$route.params.id as string), params)
+        .then((res) => {
+          this.itemBookingList = res
+        })
+        .finally(() => {
+          this.isLoadingItem = false
         })
     },
 
@@ -222,20 +260,6 @@ export default {
           component: ModalUpdateApproveStatus,
           componentProps: {
             id: id,
-          },
-        })
-        .onOk(() => {
-          this.fetchData()
-        })
-    },
-
-    openModalUpdatePO(id: string, totalItems: number): void {
-      this.$q
-        .dialog({
-          component: ModalUpdatePO,
-          componentProps: {
-            id: id,
-            totalItems: totalItems,
           },
         })
         .onOk(() => {
@@ -282,11 +306,9 @@ export default {
         })
     },
 
-    // canUpdateReceivedDate(): boolean {
-    //   if (!this.detailData) return false
-
-    //   return this.detailData?.po_details.every((po) => po.status === 'completed')
-    // },
+    canUpdateReceivedDate(): boolean {
+      return this.bookingPo.every((po) => po.status === 'completed')
+    },
   },
 }
 </script>

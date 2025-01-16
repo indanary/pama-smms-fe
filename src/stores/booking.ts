@@ -4,7 +4,7 @@ import bookingService from 'src/services/booking.service'
 
 export const useBookingStore = defineStore('booking', {
   actions: {
-    getBookingList(params: ParamBookingList): Promise<BookingList[]> {
+    getBookingList(params: ParamBookingList): Promise<Booking[]> {
       return new Promise((resolve, reject) => {
         bookingService
           .bookingList(params)
@@ -77,10 +77,10 @@ export const useBookingStore = defineStore('booking', {
       })
     },
 
-    updateBookingPo(payload: PayloadUpdateBookingPo): Promise<void> {
+    updateBookingPo(id: number, payload: PayloadUpdateBookingPo): Promise<void> {
       return new Promise((resolve, reject) => {
         bookingService
-          .updateBookingPo(payload)
+          .updateBookingPo(id, payload)
           .then((res) => {
             showNotificationSuccess(res.message)
             resolve()
@@ -92,10 +92,10 @@ export const useBookingStore = defineStore('booking', {
       })
     },
 
-    getBookingListPo(params: ParamsBookingPoList): Promise<BookingPo[]> {
+    getListBookingPo(id: number): Promise<BookingPo[]> {
       return new Promise((resolve, reject) => {
         bookingService
-          .bookingListPo(params)
+          .listBookingPo(id)
           .then((res) => {
             resolve(res.data)
           })

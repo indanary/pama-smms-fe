@@ -18,7 +18,8 @@ declare global {
   }
 
   interface ParamItemBookingList {
-    booking_id: number
+    search?: string
+    options?: number
   }
 
   interface ResponseItemList {
@@ -55,6 +56,14 @@ declare global {
 
   interface ResponseImportItem {
     message: string
+  }
+
+  interface ItemBooking extends Item {
+    item_qty: number
+  }
+
+  interface ResponseItemBookingList {
+    data: ItemBooking[]
   }
 }
 

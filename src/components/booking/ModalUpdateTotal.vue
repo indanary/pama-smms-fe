@@ -92,11 +92,11 @@ export default {
 
         this.isLoadingUpdate = true
 
-        if (this.formState.total_received_items < this.totalItems) {
+        if (Number(this.formState.total_received_items) < this.totalItems) {
           this.formState.status = 'partial'
         }
 
-        if (this.formState.total_received_items === this.totalItems) {
+        if (Number(this.formState.total_received_items) === this.totalItems) {
           this.formState.status = 'completed'
         }
 

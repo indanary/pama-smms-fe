@@ -3,7 +3,7 @@
     <q-card style="width: 1000px">
       <q-card-section>
         <div style="display: flex; justify-content: space-between; align-items: center">
-          <span style="font-size: 18px; font-weight: 500">Modal Create WR</span>
+          <span style="font-size: 18px; font-weight: 500">Modal Create WR No</span>
           <q-btn icon="close" size="sm" dense @click="onDialogCancel"></q-btn>
         </div>
       </q-card-section>
@@ -19,6 +19,7 @@
               dense
               outlined
               placeholder="Input WR no"
+              @update:model-value="convertToUppercase('wr_no')"
               :rules="[new BookingRules().validateRequired]"
             >
             </q-input>
@@ -89,6 +90,15 @@ export default {
             this.isLoadingAdd = false
           })
       })
+    },
+
+    convertToUppercase(val: 'wr_no'): void {
+      const value = this.formState[val]
+      if (typeof value === 'string') {
+        this.formState[val] = value.toUpperCase()
+      } else if (value !== undefined && value !== null) {
+        this.formState[val] = (value as string).toString().toUpperCase()
+      }
     },
   },
 }

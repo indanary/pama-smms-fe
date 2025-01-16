@@ -19,10 +19,10 @@ export const useItemStore = defineStore('item', {
       })
     },
 
-    getItemBookingList(params: ParamItemBookingList): Promise<Item[]> {
+    getItemBookingList(id: number, params: ParamItemBookingList): Promise<ItemBooking[]> {
       return new Promise((resolve, reject) => {
         itemService
-          .itemBookingList(params)
+          .itemBookingList(id, params)
           .then((res) => {
             resolve(res.data)
           })

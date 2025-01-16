@@ -3,13 +3,13 @@
     <q-card style="width: 1000px">
       <q-card-section>
         <div style="display: flex; justify-content: space-between; align-items: center">
-          <span style="font-size: 18px; font-weight: 500">Modal Posting WR </span>
+          <span style="font-size: 18px; font-weight: 500">Modal Posting WR No </span>
           <q-btn icon="close" size="sm" dense @click="onDialogCancel"></q-btn>
         </div>
       </q-card-section>
 
       <q-card-section>
-        <span>Are you sure want to posting this booking WR?</span>
+        <span>Are you sure want to posting this booking WR No?</span>
       </q-card-section>
 
       <q-card-section>
@@ -17,7 +17,7 @@
           <q-btn no-caps label="Cancel" @click="onDialogCancel" :disable="isLoadingUpdate"></q-btn>
           <q-btn
             no-caps
-            label="Update"
+            label="Posting"
             color="primary"
             @click="onUpdate"
             :loading="isLoadingUpdate"

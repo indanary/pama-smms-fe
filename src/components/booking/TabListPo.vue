@@ -1,5 +1,8 @@
 <template>
-  <span style="font-size: 20px; font-weight: 600">List Booking PO</span>
+  <div style="display: flex; justify-content: space-between; align-items: center">
+    <span style="font-size: 20px; font-weight: 600">List PO Numbers</span>
+    <q-btn color="primary" no-caps @click="openModalUpdatePO">Add PO Number</q-btn>
+  </div>
 
   <q-table
     :rows="bookingPo"
@@ -31,13 +34,6 @@
             </div>
           </template>
 
-          <!-- <template v-else-if="col.name === 'notes'">
-          <div style="display: flex; align-items: center; justify-content: start; gap: 16px">
-            <span v-if="props.row.notes !== ''">{{ props.row.notes }}</span>
-            <q-btn label="Update Notes" no-caps color="secondary" size="sm"></q-btn>
-          </div>
-        </template> -->
-
           <template v-else-if="col.name === 'total_received_items'">
             <div style="display: flex; align-items: center; justify-content: start; gap: 16px">
               <span>{{ props.row.total_received_items }}</span>
@@ -59,26 +55,23 @@
           </template>
 
           <template v-else-if="col.name === 'items'">
+            <template v-if="props.row.items.length > 0">
+              <q-btn
+                label="See Items Detail"
+                no-caps
+                color="primary"
+                size="sm"
+                @click="openModalDetailItems(props.row.items)"
+              ></q-btn>
+            </template>
             <q-btn
-              v-if="props.row.items.length === 0"
+              v-else
               label="Choose Items"
               no-caps
               color="secondary"
               size="sm"
               @click="openModalChoosePO(props.row.po_number)"
             ></q-btn>
-            <template v-else>
-              <q-card
-                v-for="(item, index) in props.row.items"
-                :key="index"
-                style="display: flex; flex-direction: column; align-items: start; padding: 4px"
-                flat
-                bordered
-              >
-                <span style="font-size: 10px">Stock Code: {{ item.stock_code }}</span>
-                <span style="font-size: 10px">Item Name: {{ item.item_name }}</span>
-              </q-card>
-            </template>
           </template>
 
           <template v-else>
@@ -92,14 +85,29 @@
 
 <script lang="ts">
 import { type QTableColumn } from 'quasar'
-import { ref } from 'vue'
 import { useBookingStore } from 'src/stores/booking'
+import ModalUpdatePO from 'src/components/booking/ModalUpdatePO.vue'
 import ModalUpdateDueDate from 'src/components/booking/ModalUpdateDueDate.vue'
 import ModalUpdateTotal from 'src/components/booking/ModalUpdateTotal.vue'
 import ModalChoosePOItem from 'src/components/booking/ModalChoosePOItem.vue'
+import ModalItemDetails from 'src/components/booking/ModalItemDetails.vue'
 
 export default {
   name: 'TabListPo',
+  props: {
+    bookingPo: {
+      type: Object as () => BookingPo[],
+      required: true,
+    },
+    isLoadingPo: {
+      type: Boolean,
+      required: true,
+    },
+    totalItems: {
+      type: Number,
+      required: true,
+    },
+  },
   setup() {
     const bookingStore = useBookingStore()
 
@@ -146,45 +154,55 @@ export default {
         field: 'due_date',
         align: 'left',
       },
-      // {
-      //   name: 'notes',
-      //   required: true,
-      //   label: 'Notes',
-      //   field: 'notes',
-      //   align: 'left',
-      // },
     ]
-
-    const bookingPo = ref([] as BookingPo[])
-    const isLoadingPo = ref(true)
 
     return {
       bookingStore,
       tableColumns,
-      bookingPo,
-      isLoadingPo,
     }
   },
 
-  mounted() {
-    this.fetchListPo()
-  },
+  mounted() {},
 
   methods: {
-    fetchListPo(): void {
-      this.isLoadingPo = true
-
-      const params: ParamsBookingPoList = {
-        booking_id: Number(this.$route.params.id),
-      }
-
-      this.bookingStore
-        .getBookingListPo(params)
-        .then((res) => {
-          this.bookingPo = res
+    openModalUpdatePO(): void {
+      this.$q
+        .dialog({
+          component: ModalUpdatePO,
+          componentProps: {
+            id: this.$route.params.id as string,
+            totalItems: this.totalItems,
+          },
         })
-        .finally(() => {
-          this.isLoadingPo = false
+        .onOk(() => {
+          this.$emit('refresh')
+        })
+    },
+
+    openModalChoosePO(poNumber: string): void {
+      this.$q
+        .dialog({
+          component: ModalChoosePOItem,
+          componentProps: {
+            bookingId: Number(this.$route.params.id),
+            poNumber: poNumber,
+          },
+        })
+        .onOk(() => {
+          this.$emit('refresh')
+        })
+    },
+
+    openModalDetailItems(items: BookingPo['items']): void {
+      this.$q
+        .dialog({
+          component: ModalItemDetails,
+          componentProps: {
+            items: items,
+          },
+        })
+        .onOk(() => {
+          this.$emit('refresh')
         })
     },
 
@@ -197,7 +215,7 @@ export default {
           },
         })
         .onOk(() => {
-          this.fetchListPo()
+          this.$emit('refresh')
         })
     },
 
@@ -212,21 +230,7 @@ export default {
           },
         })
         .onOk(() => {
-          this.fetchListPo()
-        })
-    },
-
-    openModalChoosePO(poNumber: string): void {
-      this.$q
-        .dialog({
-          component: ModalChoosePOItem,
-          componentProps: {
-            bookingId: Number(this.$route.params.id),
-            poNumber: poNumber,
-          },
-        })
-        .onOk(() => {
-          this.fetchListPo()
+          this.$emit('refresh')
         })
     },
   },

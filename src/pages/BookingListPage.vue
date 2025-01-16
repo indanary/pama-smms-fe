@@ -132,7 +132,7 @@ export default {
   setup() {
     const bookingStore = useBookingStore()
 
-    const bookingList = ref([] as BookingList[])
+    const bookingList = ref([] as Booking[])
     const tableColumns: QTableColumn[] = [
       {
         name: 'id',
@@ -200,7 +200,7 @@ export default {
       {
         name: 'posting_wr',
         required: true,
-        label: 'Posting WR',
+        label: 'Posting WR No',
         field: 'posting_wr',
         align: 'center',
       },
