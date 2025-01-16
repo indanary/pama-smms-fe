@@ -12,7 +12,7 @@ export const SidebarMenuList: SidebarMenu[] = [
         route: '/bookings/add',
         icon: 'list_alt',
         name: 'Add Bookings',
-        permission: ['super_admin', 'admin', 'planner', 'inventory', 'purchasing', 'warehouse'],
+        permission: ['super_admin', 'admin'],
       },
       {
         route: '/bookings',
@@ -32,6 +32,6 @@ export const SidebarMenuList: SidebarMenu[] = [
     route: '/users',
     icon: 'person',
     name: 'User',
-    permission: ['super_admin', 'admin'],
+    permission: ['super_admin'],
   },
 ]

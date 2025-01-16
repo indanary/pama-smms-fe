@@ -1,7 +1,14 @@
 <template>
   <div style="display: flex; justify-content: space-between; align-items: center">
     <span style="font-size: 20px; font-weight: 600">List PO Numbers</span>
-    <q-btn color="primary" no-caps @click="openModalUpdatePO">Add PO Number</q-btn>
+    <q-btn
+      v-if="$permission(['purchasing', 'inventory'])"
+      color="primary"
+      no-caps
+      @click="openModalUpdatePO"
+      >Add PO Number</q-btn
+    >
+    <div v-else></div>
   </div>
 
   <q-table
@@ -25,6 +32,7 @@
             <div style="display: flex; align-items: center; justify-content: start; gap: 16px">
               <span v-if="props.row.due_date !== ''">{{ props.row.due_date }}</span>
               <q-btn
+                v-if="$permission(['inventory', 'purchasing'])"
                 label="Update Due Date"
                 no-caps
                 color="secondary"
