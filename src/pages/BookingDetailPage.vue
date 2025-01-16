@@ -47,8 +47,8 @@
         </DetailItem>
 
         <DetailItem label="Received Date">
-          <template v-if="detailData?.approved_status === 1">
-            <span v-if="detailData?.received_date !== '' && canUpdateReceivedDate()">
+          <template v-if="detailData?.approved_status === 1 && canUpdateReceivedDate()">
+            <span v-if="detailData?.received_date !== ''">
               {{ detailData?.received_date }}
             </span>
             <q-btn v-else color="secondary" no-caps @click="openModalUpdateReceived(detailData?.id)"

@@ -59,10 +59,11 @@
               outlined
               use-input
               map-options
+              emit-value
               :placeholder="formState.role !== '' ? '' : 'Select role'"
               :options="roleOptions"
-              option-label="name"
-              option-value="value"
+              :option-label="'name'"
+              :option-value="'value'"
               :rules="[new UserRules().validateRequired]"
             ></q-select>
           </div>

@@ -45,6 +45,9 @@
         </q-item-section>
       </q-item>
     </template>
+    <template v-slot:no-option>
+      <span>No options</span>
+    </template>
   </q-select>
 </template>
 
