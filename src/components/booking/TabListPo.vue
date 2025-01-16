@@ -154,6 +154,13 @@ export default {
         field: 'due_date',
         align: 'left',
       },
+      {
+        name: 'created_at',
+        required: true,
+        label: 'Created At',
+        field: 'created_at',
+        align: 'left',
+      },
     ]
 
     return {
