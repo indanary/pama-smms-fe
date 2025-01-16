@@ -8,9 +8,13 @@
       :rows="userList"
       :columns="tableColumns"
       :loading="isLoadingFetchList"
+      :pagination="tablePaginations"
+      :rows-per-page-options="tablePaginations.recordPerPage"
       row-key="id"
       style="margin-top: 16px"
       table-header-style="background: var(--app-primary); color: white"
+      flat
+      @request="onRequest"
     >
       <template v-slot:body="props">
         <q-tr :props="props" style="cursor: pointer">
@@ -24,11 +28,21 @@
         </q-tr>
       </template>
     </q-table>
+    <div style="display: flex; justify-content: start">
+      <q-pagination
+        v-model="tablePaginations.page"
+        :max="tablePaginations.rowsNumber"
+        :max-pages="6"
+        boundary-numbers
+        size="12px"
+        @update:model-value="onPagePagination"
+      />
+    </div>
   </PageCard>
 </template>
 
 <script lang="ts">
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { type QTableColumn } from 'quasar'
 import { useUserStore } from 'src/stores/user'
 import ModalAddUser from 'src/components/user/ModalAddUser.vue'
@@ -78,6 +92,16 @@ export default {
       },
     ]
     const isLoadingFetchList = ref(true)
+    const tablePaginations = reactive({
+      page: 1,
+      rowsPerPage: 10,
+      rowsNumber: 0,
+      recordPerPage: [10, 25, 50],
+    })
+    const params: ParamUserList = reactive({
+      page: tablePaginations.page,
+      limit: tablePaginations.rowsPerPage,
+    })
 
     return {
       userStore,
@@ -85,6 +109,8 @@ export default {
       tableColumns,
       isLoadingFetchList,
       getUserRole,
+      tablePaginations,
+      params,
     }
   },
   mounted() {
@@ -95,13 +121,36 @@ export default {
       this.isLoadingFetchList = true
 
       this.userStore
-        .getUserList()
+        .getUserList(this.params)
         .then((res) => {
-          this.userList = res
+          this.userList = res.data
+
+          this.tablePaginations.page = res.page
+          this.tablePaginations.rowsPerPage = res.limit
+          this.tablePaginations.rowsNumber = res.totalPages
         })
         .finally(() => {
           this.isLoadingFetchList = false
         })
+    },
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    onRequest(props: any): void {
+      this.tablePaginations.page = 1
+      this.tablePaginations.rowsPerPage = props.pagination.rowsPerPage
+
+      this.params.page = 1
+      this.params.limit = props.pagination.rowsPerPage
+
+      this.fetchData()
+    },
+
+    onPagePagination(page: number): void {
+      this.tablePaginations.page = page
+
+      this.params.page = page
+
+      this.fetchData()
     },
 
     openModalAdd(): void {

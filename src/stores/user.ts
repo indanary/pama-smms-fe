@@ -24,12 +24,12 @@ export const useUserStore = defineStore('user', {
       })
     },
 
-    getUserList(): Promise<User[]> {
+    getUserList(params: ParamUserList): Promise<ResponseUserList> {
       return new Promise((resolve, reject) => {
         userService
-          .userList()
+          .userList(params)
           .then((res) => {
-            resolve(res.data)
+            resolve(res)
           })
           .catch((err) => {
             showNotificationFailed(err)

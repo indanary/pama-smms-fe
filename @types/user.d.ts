@@ -25,8 +25,17 @@ declare global {
     last_updated_by: string
   }
 
+  interface ParamUserList {
+    page?: number
+    limit?: number
+  }
+
   interface ResponseUserList {
     data: User[]
+    limit: number
+    page: number
+    totalItems: number
+    totalPages: number
   }
 
   interface FormUser {

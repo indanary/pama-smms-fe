@@ -1,3 +1,4 @@
+import { buildParams } from 'app/utils/common.util'
 import { api } from 'src/boot/axios'
 
 export default {
@@ -14,12 +15,12 @@ export default {
     })
   },
 
-  userList(): Promise<ResponseUserList> {
+  userList(params: ParamUserList): Promise<ResponseUserList> {
     return new Promise((resolve, reject) => {
       api
-        .get('/users')
+        .get(`/users${buildParams(params)}`)
         .then((res) => {
-          resolve(res)
+          resolve(res.data)
         })
         .catch((err) => {
           reject(err.response.data.message ?? 'Unknown error')
