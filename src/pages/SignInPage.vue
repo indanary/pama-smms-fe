@@ -22,7 +22,7 @@
       <q-card-section>
         <div style="display: flex; flex-direction: column; gap: 8px">
           <span style="font-size: 32px; font-weight: 500">Log in</span>
-          <span>Welcome to Pama SMMS Dashboard</span>
+          <span>Welcome to SiBook Dashboard</span>
         </div>
       </q-card-section>
 

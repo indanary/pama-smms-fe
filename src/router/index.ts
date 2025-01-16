@@ -46,9 +46,9 @@ export default defineRouter(function (/* { store, ssrContext } */) {
 
     // set document title
     if (to.meta.title) {
-      document.title = `${to.meta.title} | PAMA SMMS`
+      document.title = `${to.meta.title} | SiBook`
     } else {
-      document.title = 'PAMA SMMS'
+      document.title = 'SiBook'
     }
 
     const isAuthenticated: boolean = !!tokenStore.getAccessToken()

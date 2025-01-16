@@ -1,6 +1,6 @@
 <template>
   <PageCard title="Dashboard">
-    <div>Welcome to Pama Improvement Dashboard</div>
+    <div>Welcome to SiBook Dashboard</div>
   </PageCard>
 </template>
 
