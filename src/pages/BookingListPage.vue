@@ -1,7 +1,7 @@
 <template>
   <PageCard title="Booking List">
     <div style="display: flex; justify-content: space-between; align-items: center">
-      <div></div>
+      <q-btn label="Export Excel" color="primary" no-caps @click="exportData"></q-btn>
       <div style="width: 280px">
         <SearchInput
           :placeholder="'Search by Booking ID, PO Numbers'"
@@ -278,6 +278,7 @@ export default {
       page: tablePaginations.page,
       limit: tablePaginations.rowsPerPage,
     })
+    const isLoadingExport = ref(false)
 
     return {
       bookingStore,
@@ -286,6 +287,7 @@ export default {
       tablePaginations,
       isLoadingFetchList,
       params,
+      isLoadingExport,
     }
   },
 
@@ -392,6 +394,41 @@ export default {
         })
         .onOk(() => {
           this.fetchData()
+        })
+    },
+
+    exportData(): void {
+      this.isLoadingExport = true
+
+      this.bookingStore
+        .exportBooking()
+        .then((res) => {
+          const url = window.URL.createObjectURL(new Blob([res]))
+          const link = document.createElement('a')
+
+          const today = new Date()
+
+          // Define formatting options
+          const options = {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+          } as Intl.DateTimeFormatOptions
+
+          // Format the date correctly
+          const formattedDate = new Intl.DateTimeFormat('en-GB', options)
+            .format(today)
+            .replace(',', '')
+          const filename = 'bookings-' + formattedDate + '.xlsx'
+
+          link.href = url
+          link.setAttribute('download', filename)
+          document.body.appendChild(link)
+          link.click()
+          link.remove()
+        })
+        .finally(() => {
+          this.isLoadingExport = false
         })
     },
   },

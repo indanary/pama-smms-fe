@@ -15,6 +15,21 @@ export default {
     })
   },
 
+  exportBooking(): Promise<Blob> {
+    return new Promise((resolve, reject) => {
+      api
+        .get('/bookings/export', {
+          responseType: 'blob',
+        })
+        .then((res) => {
+          resolve(res.data)
+        })
+        .catch((err) => {
+          reject(err.response.data.message ?? 'Unknown error')
+        })
+    })
+  },
+
   addBooking(payload: PayloadAddBooking): Promise<ResponseAddBooking> {
     return new Promise((resolve, reject) => {
       api

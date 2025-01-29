@@ -18,6 +18,20 @@ export const useBookingStore = defineStore('booking', {
       })
     },
 
+    exportBooking(): Promise<Blob> {
+      return new Promise((resolve, reject) => {
+        bookingService
+          .exportBooking()
+          .then((res) => {
+            resolve(res)
+          })
+          .catch((err) => {
+            showNotificationFailed(err)
+            reject(err)
+          })
+      })
+    },
+
     addBooking(payload: PayloadAddBooking): Promise<void> {
       return new Promise((resolve, reject) => {
         bookingService
