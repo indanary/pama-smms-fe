@@ -6,7 +6,55 @@
 
         <q-space></q-space>
 
-        <q-btn-dropdown color="white" flat icon="account_circle" size="lg">
+        <q-btn
+          :loading="isLoadingFetchNotification"
+          color="white"
+          flat
+          icon="notifications"
+          size="md"
+          :class="unreadNotifCount > 0 ? 'notif' : ''"
+        >
+          <q-menu anchor="bottom left">
+            <q-list separator style="min-width: 280px">
+              <q-item style="display: flex; align-items: center; justify-content: space-between">
+                <q-item-section style="font-weight: 600"
+                  >Notifications ({{ unreadNotifCount }} Unread)</q-item-section
+                >
+                <q-btn
+                  flat
+                  dense
+                  no-caps
+                  @click="onClickSeeAllNotif"
+                  color="primary"
+                  label="See all"
+                ></q-btn>
+              </q-item>
+
+              <template v-if="notificationList.length > 0">
+                <q-item
+                  v-for="(notif, index) in notificationList"
+                  :key="index"
+                  clickable
+                  v-close-popup
+                  style="display: flex; flex-direction: column"
+                  :style="{ backgroundColor: notif.is_read === 0 ? '#fcc0c0' : 'white' }"
+                  @click="onClickNotif(notif.id, notif.booking_id)"
+                >
+                  <span style="font-weight: 500">BOOKSM{{ notif.booking_id }}</span>
+                  <span style="font-size: 12px">{{ notif.message }}</span>
+                </q-item>
+              </template>
+
+              <template v-else>
+                <q-item>
+                  <q-item-section>Empty notifications</q-item-section>
+                </q-item>
+              </template>
+            </q-list>
+          </q-menu>
+        </q-btn>
+
+        <q-btn-dropdown color="white" flat icon="account_circle" size="md">
           <q-list>
             <q-item style="cursor: default">
               <q-item-section>
@@ -95,6 +143,7 @@
 <script lang="ts">
 import { useUserStore } from 'src/stores/user'
 import { useAuthStore } from 'src/stores/auth'
+import { useNotificationStore } from 'src/stores/notification'
 import { ref } from 'vue'
 import { SidebarMenuList } from 'app/data/menu-list'
 
@@ -103,15 +152,27 @@ export default {
   setup() {
     const userStore = useUserStore()
     const authStore = useAuthStore()
+    const notificationStore = useNotificationStore()
 
     const leftDrawerOpen = ref(false)
+    const isLoadingFetchNotification = ref(true)
+    const unreadNotifCount = ref(0)
+    const notificationList = ref([] as NotificationUser[])
 
     return {
       userStore,
       authStore,
+      notificationStore,
       leftDrawerOpen,
       SidebarMenuList,
+      isLoadingFetchNotification,
+      unreadNotifCount,
+      notificationList,
     }
+  },
+
+  mounted() {
+    this.fetchNotification()
   },
 
   methods: {
@@ -139,6 +200,55 @@ export default {
 
       return isMenuAvailable
     },
+
+    fetchNotification(): void {
+      this.isLoadingFetchNotification = true
+
+      this.notificationStore
+        .getNotificationList()
+        .then((res) => {
+          this.notificationList = res
+
+          this.unreadNotifCount = this.notificationList.filter(
+            (notif) => notif.is_read === 0,
+          ).length
+        })
+        .finally(() => {
+          this.isLoadingFetchNotification = false
+        })
+    },
+
+    onClickNotif(id: number, bookingId: number): void {
+      this.notificationStore
+        .readNotification(id)
+        .then(() => {
+          window.open(`/bookings/${bookingId}`, '_blank')
+        })
+        .finally(() => {
+          this.fetchNotification()
+        })
+    },
+
+    onClickSeeAllNotif(): void {
+      this.$router.push('/notifications')
+    },
   },
 }
 </script>
+
+<style lang="scss">
+.notif {
+  position: relative;
+}
+
+.notif::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  right: 14px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: red;
+}
+</style>
