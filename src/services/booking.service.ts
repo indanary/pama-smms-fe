@@ -138,4 +138,17 @@ export default {
         })
     })
   },
+
+  deleteBookingPo(id: number): Promise<ResponseDeleteBookingPo> {
+    return new Promise((resolve, reject) => {
+      api
+        .delete(`/pos/${id}`)
+        .then((res) => {
+          resolve({ message: res.data.message })
+        })
+        .catch((err) => {
+          reject(err.response.data.message ?? 'Unknown error')
+        })
+    })
+  },
 }

@@ -48,6 +48,21 @@ export const useItemStore = defineStore('item', {
       })
     },
 
+    updateTotalReceivedItems(payload: PayloadUpdateTotalReceivedItems): Promise<void> {
+      return new Promise((resolve, reject) => {
+        itemService
+          .updateTotalReceivedItems(payload)
+          .then((res) => {
+            showNotificationSuccess(res.message)
+            resolve()
+          })
+          .catch((err) => {
+            showNotificationFailed(err)
+            reject(err)
+          })
+      })
+    },
+
     importItem(payload: PayloadImportItem): Promise<void> {
       return new Promise((resolve, reject) => {
         itemService

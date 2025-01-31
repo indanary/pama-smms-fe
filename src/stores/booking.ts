@@ -149,5 +149,20 @@ export const useBookingStore = defineStore('booking', {
           })
       })
     },
+
+    deleteBookingPo(id: number): Promise<void> {
+      return new Promise((resolve, reject) => {
+        bookingService
+          .deleteBookingPo(id)
+          .then((res) => {
+            showNotificationSuccess(res.message)
+            resolve()
+          })
+          .catch((err) => {
+            showNotificationFailed(err)
+            reject(err)
+          })
+      })
+    },
   },
 })

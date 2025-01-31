@@ -71,7 +71,9 @@
         <DetailItem label="WR No">
           <template v-if="detailData?.approved_status === 1">
             <q-btn
-              v-if="detailData?.received === 1 && detailData?.wr_no === ''"
+              v-if="
+                detailData?.received === 1 && detailData?.wr_no === '' && $permission(['planner'])
+              "
               color="secondary"
               no-caps
               @click="openModalAddWR(detailData?.id)"
@@ -148,7 +150,7 @@
             :booking-po="bookingPo"
             :is-loading-po="isLoadingPo"
             :total-items="itemBookingList.length"
-            @refresh="fetchListPo"
+            @refresh="refreshUpdateItems"
           ></TabListPo>
         </q-tab-panel>
 
@@ -156,6 +158,7 @@
           <TabListItem
             :item-booking-list="itemBookingList"
             :is-loading-item="isLoadingItem"
+            @refresh="refreshUpdateItems"
           ></TabListItem>
         </q-tab-panel>
       </q-tab-panels>
@@ -218,6 +221,12 @@ export default {
   },
 
   methods: {
+    refreshUpdateItems(): void {
+      this.fetchData()
+      this.fetchListPo()
+      this.fetchListItem()
+    },
+
     fetchData(): void {
       this.isLoadingDetail = true
 

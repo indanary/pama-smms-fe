@@ -41,6 +41,21 @@ export default {
     })
   },
 
+  updateTotalReceivedItems(
+    payload: PayloadUpdateTotalReceivedItems,
+  ): Promise<ResponseUpdateTotalReceivedItems> {
+    return new Promise((resolve, reject) => {
+      api
+        .put('/items/update-received-items', payload)
+        .then((res) => {
+          resolve({ message: res.data.message })
+        })
+        .catch((err) => {
+          reject(err.response.data.message ?? 'Unknown error')
+        })
+    })
+  },
+
   importItem(payload: PayloadImportItem): Promise<ResponseImportItem> {
     return new Promise((resolve, reject) => {
       api

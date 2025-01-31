@@ -125,6 +125,10 @@ declare global {
   interface ResponseUpdateBookingPoDetail {
     message: string
   }
+
+  interface ResponseDeleteBookingPo {
+    message: string
+  }
 }
 
 export {}

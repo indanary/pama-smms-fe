@@ -44,14 +44,18 @@
 <script lang="ts">
 import { useDialogPluginComponent, type QForm } from 'quasar'
 import { reactive, ref } from 'vue'
-import { useBookingStore } from 'src/stores/booking'
 import { BookingRules } from 'app/utils/booking.util.js'
+import { useItemStore } from 'src/stores/item'
 
 export default {
   name: 'ModalUpdateTotal',
   props: {
     id: {
       type: Number,
+      required: true,
+    },
+    poNumber: {
+      type: String,
       required: true,
     },
     totalItems: {
@@ -67,11 +71,10 @@ export default {
   },
   setup(props) {
     const { dialogRef, onDialogCancel, onDialogOK } = useDialogPluginComponent()
-    const bookingStore = useBookingStore()
+    const itemStore = useItemStore()
 
     const formState = reactive({
       total_received_items: props.totalReceived ?? 0,
-      status: 'not complete',
     })
     const isLoadingUpdate = ref(false)
 
@@ -79,10 +82,10 @@ export default {
       dialogRef,
       onDialogCancel,
       onDialogOK,
-      bookingStore,
       formState,
       isLoadingUpdate,
       BookingRules,
+      itemStore,
     }
   },
   methods: {
@@ -92,21 +95,14 @@ export default {
 
         this.isLoadingUpdate = true
 
-        if (Number(this.formState.total_received_items) < this.totalItems) {
-          this.formState.status = 'partial'
+        const payload: PayloadUpdateTotalReceivedItems = {
+          item_id: this.id,
+          po_number: this.poNumber,
+          total_received_items: this.formState.total_received_items,
         }
 
-        if (Number(this.formState.total_received_items) === this.totalItems) {
-          this.formState.status = 'completed'
-        }
-
-        const payload: PayloadUpdateBookingPoDetail = {
-          total_received_items: Number(this.formState.total_received_items),
-          status: this.formState.status,
-        }
-
-        this.bookingStore
-          .updateBookingPoDetail(this.id, payload)
+        this.itemStore
+          .updateTotalReceivedItems(payload)
           .then(() => {
             this.onDialogOK()
           })

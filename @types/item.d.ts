@@ -11,6 +11,7 @@ declare global {
     created_by: string
     last_updated_at: string
     last_updated_by: string
+    total_received_items: number
   }
 
   interface ParamItemList {
@@ -70,6 +71,16 @@ declare global {
 
   interface ResponseItemBookingList {
     data: ItemBooking[]
+  }
+
+  interface PayloadUpdateTotalReceivedItems {
+    item_id: number
+    po_number: string
+    total_received_items: number
+  }
+
+  interface ResponseUpdateTotalReceivedItems {
+    message: string
   }
 }
 

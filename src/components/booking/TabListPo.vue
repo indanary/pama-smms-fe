@@ -5,6 +5,7 @@
       v-if="$permission(['purchasing', 'inventory'])"
       color="primary"
       no-caps
+      :disable="disableUpdatePO()"
       @click="openModalUpdatePO"
       >Add PO Number</q-btn
     >
@@ -45,20 +46,6 @@
           <template v-else-if="col.name === 'total_received_items'">
             <div style="display: flex; align-items: center; justify-content: start; gap: 16px">
               <span>{{ props.row.total_received_items }}</span>
-              <q-btn
-                v-if="props.row.status !== 'completed'"
-                label="Update Total"
-                no-caps
-                color="secondary"
-                size="sm"
-                @click.stop="
-                  openModalUpdatePOTotal(
-                    props.row.id,
-                    props.row.total_qty_items,
-                    props.row.total_received_items,
-                  )
-                "
-              ></q-btn>
             </div>
           </template>
 
@@ -82,6 +69,18 @@
             ></q-btn>
           </template>
 
+          <template v-else-if="col.name === 'action'">
+            <q-btn
+              v-if="props.row.items.length === 0"
+              label="Delete PO"
+              no-caps
+              color="red"
+              size="sm"
+              @click="deleteBookingPo(props.row.id)"
+            >
+            </q-btn>
+          </template>
+
           <template v-else>
             <span>{{ props.row[col.name] }}</span>
           </template>
@@ -96,7 +95,6 @@ import { type QTableColumn } from 'quasar'
 import { useBookingStore } from 'src/stores/booking'
 import ModalUpdatePO from 'src/components/booking/ModalUpdatePO.vue'
 import ModalUpdateDueDate from 'src/components/booking/ModalUpdateDueDate.vue'
-import ModalUpdateTotal from 'src/components/booking/ModalUpdateTotal.vue'
 import ModalChoosePOItem from 'src/components/booking/ModalChoosePOItem.vue'
 import ModalItemDetails from 'src/components/booking/ModalItemDetails.vue'
 
@@ -169,6 +167,13 @@ export default {
         field: 'created_at',
         align: 'left',
       },
+      {
+        name: 'action',
+        required: true,
+        label: 'Action',
+        field: 'id',
+        align: 'left',
+      },
     ]
 
     return {
@@ -177,9 +182,11 @@ export default {
     }
   },
 
-  mounted() {},
-
   methods: {
+    disableUpdatePO(): boolean {
+      return this.bookingPo.length === this.totalItems
+    },
+
     openModalUpdatePO(): void {
       this.$q
         .dialog({
@@ -234,19 +241,10 @@ export default {
         })
     },
 
-    openModalUpdatePOTotal(id: number, totalItems: number, totalReceived: number): void {
-      this.$q
-        .dialog({
-          component: ModalUpdateTotal,
-          componentProps: {
-            id: id,
-            totalItems: totalItems,
-            totalReceived: totalReceived,
-          },
-        })
-        .onOk(() => {
-          this.$emit('refresh')
-        })
+    deleteBookingPo(id: number): void {
+      this.bookingStore.deleteBookingPo(id).then(() => {
+        this.$emit('refresh')
+      })
     },
   },
 }

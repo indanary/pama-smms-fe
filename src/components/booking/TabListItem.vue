@@ -8,11 +8,42 @@
     row-key="id"
     table-header-style="background: var(--app-primary); color: white"
     style="margin-top: 12px"
-  ></q-table>
+  >
+    <template v-slot:body="props">
+      <q-tr :props="props">
+        <q-td v-for="col in props.cols" :key="col.name" :props="props">
+          <template v-if="col.name === 'total_received_items'">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 16px">
+              <span>{{ props.row.total_received_items }}</span>
+              <q-btn
+                v-if="$permission(['warehouse'])"
+                label="Update Total"
+                no-caps
+                color="secondary"
+                size="sm"
+                @click="
+                  openModalUpdateTotal(
+                    props.row.id,
+                    props.row.item_qty,
+                    props.row.total_received_items,
+                    props.row.po_number,
+                  )
+                "
+              ></q-btn>
+            </div>
+          </template>
+          <template v-else>
+            <span>{{ props.row[col.name] }}</span>
+          </template>
+        </q-td>
+      </q-tr>
+    </template>
+  </q-table>
 </template>
 
 <script lang="ts">
 import { type QTableColumn } from 'quasar'
+import ModalUpdateTotal from 'components/booking/ModalUpdateTotal.vue'
 
 export default {
   name: 'TabListItem',
@@ -28,6 +59,13 @@ export default {
   },
   setup() {
     const tableColumns: QTableColumn[] = [
+      {
+        name: 'po_number',
+        required: true,
+        label: 'PO Number',
+        field: 'po_number',
+        align: 'left',
+      },
       {
         name: 'stock_code',
         required: true,
@@ -78,6 +116,13 @@ export default {
         align: 'left',
       },
       {
+        name: 'total_received_items',
+        required: true,
+        label: 'Total Received Items',
+        field: 'total_received_items',
+        align: 'center',
+      },
+      {
         name: 'created_at',
         required: true,
         label: 'Created At',
@@ -96,6 +141,28 @@ export default {
     return {
       tableColumns,
     }
+  },
+  methods: {
+    openModalUpdateTotal(
+      id: number,
+      item_qty: number,
+      total_received_items: number,
+      po_number: string,
+    ): void {
+      this.$q
+        .dialog({
+          component: ModalUpdateTotal,
+          componentProps: {
+            id: id,
+            totalItems: item_qty,
+            totalReceived: total_received_items,
+            poNumber: po_number,
+          },
+        })
+        .onOk(() => {
+          this.$emit('refresh')
+        })
+    },
   },
 }
 </script>
