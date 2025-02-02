@@ -40,4 +40,20 @@ export default {
         })
     })
   },
+
+  updateStatusUser(
+    id: number,
+    payload: PayloadUpdateStatusUser,
+  ): Promise<ResponseUpdateStatusUser> {
+    return new Promise((resolve, reject) => {
+      api
+        .put(`/users/${id}/activate`, payload)
+        .then((res) => {
+          resolve({ message: res.data.message })
+        })
+        .catch((err) => {
+          reject(err.response.data.message ?? 'Unknown error')
+        })
+    })
+  },
 }

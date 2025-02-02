@@ -23,6 +23,7 @@ declare global {
     created_by: string
     last_updated_at: string
     last_updated_by: string
+    is_active: number | boolean
   }
 
   interface ParamUserList {
@@ -48,6 +49,14 @@ declare global {
   type PayloadAddUser = FormUser
 
   interface ResponseAddUser {
+    message: string
+  }
+
+  interface PayloadUpdateStatusUser {
+    is_active: boolean
+  }
+
+  interface ResponseUpdateStatusUser {
     message: string
   }
 }

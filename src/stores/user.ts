@@ -52,5 +52,20 @@ export const useUserStore = defineStore('user', {
           })
       })
     },
+
+    updateStatusUser(id: number, payload: PayloadUpdateStatusUser): Promise<void> {
+      return new Promise((resolve, reject) => {
+        userService
+          .updateStatusUser(id, payload)
+          .then((res) => {
+            showNotificationSuccess(res.message)
+            resolve()
+          })
+          .catch((err) => {
+            showNotificationFailed(err)
+            reject(err)
+          })
+      })
+    },
   },
 })

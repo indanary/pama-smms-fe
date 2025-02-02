@@ -21,6 +21,16 @@
           <q-td v-for="col in props.cols" :key="col.name" :props="props">
             <template v-if="col.name === 'role'"> {{ getUserRole(props.row.role) }} </template>
 
+            <template v-else-if="col.name === 'is_active'">
+              <div style="display: flex; align-items: center; gap: 4px">
+                <q-toggle
+                  v-model="props.row.is_active"
+                  @update:model-value="($event) => updateStatusUser($event, props.row.id)"
+                />
+                <span>{{ props.row.is_active === 0 ? 'Inactive' : 'Active' }}</span>
+              </div>
+            </template>
+
             <template v-else>
               <span>{{ props.row[col.name] }}</span>
             </template>
@@ -90,6 +100,13 @@ export default {
         field: 'created_by',
         align: 'center',
       },
+      {
+        name: 'is_active',
+        required: true,
+        label: 'Status',
+        field: 'is_active',
+        align: 'center',
+      },
     ]
     const isLoadingFetchList = ref(true)
     const tablePaginations = reactive({
@@ -123,7 +140,7 @@ export default {
       this.userStore
         .getUserList(this.params)
         .then((res) => {
-          this.userList = res.data
+          this.userList = res.data.map((data) => ({ ...data, is_active: data.is_active === 1 }))
 
           this.tablePaginations.page = res.page
           this.tablePaginations.rowsPerPage = res.limit
@@ -132,6 +149,16 @@ export default {
         .finally(() => {
           this.isLoadingFetchList = false
         })
+    },
+
+    updateStatusUser(value: boolean, id: number): void {
+      const payload: PayloadUpdateStatusUser = {
+        is_active: value,
+      }
+
+      this.userStore.updateStatusUser(id, payload).then(() => {
+        this.fetchData()
+      })
     },
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
