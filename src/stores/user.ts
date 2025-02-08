@@ -1,6 +1,7 @@
 import { showNotificationFailed, showNotificationSuccess } from 'app/utils/notify.util'
 import { defineStore } from 'pinia'
 import userService from 'src/services/user.service'
+import { useTokenStore } from './token'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -18,7 +19,10 @@ export const useUserStore = defineStore('user', {
             resolve()
           })
           .catch((err) => {
-            showNotificationFailed(err)
+            const tokenStore = useTokenStore()
+
+            tokenStore.forceLogoutUser()
+
             reject(err)
           })
       })
