@@ -15,21 +15,23 @@
           <template v-if="col.name === 'total_received_items'">
             <div style="display: flex; align-items: center; justify-content: center; gap: 16px">
               <span>{{ props.row.total_received_items }}</span>
-              <q-btn
-                v-if="$permission(['warehouse'])"
-                label="Update Total"
-                no-caps
-                color="secondary"
-                size="sm"
-                @click="
-                  openModalUpdateTotal(
-                    props.row.id,
-                    props.row.item_qty,
-                    props.row.total_received_items,
-                    props.row.po_number,
-                  )
-                "
-              ></q-btn>
+              <template v-if="props.row.po_number">
+                <q-btn
+                  v-if="Number(props.row.total_received_items) < Number(props.row.item_qty)"
+                  label="Update Total"
+                  no-caps
+                  color="secondary"
+                  size="sm"
+                  @click="
+                    openModalUpdateTotal(
+                      props.row.id,
+                      props.row.item_qty,
+                      props.row.total_received_items,
+                      props.row.po_number,
+                    )
+                  "
+                ></q-btn>
+              </template>
             </div>
           </template>
           <template v-else>

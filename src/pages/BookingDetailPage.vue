@@ -32,7 +32,7 @@
               v-if="detailData?.approved_status === 0 && $permission(['planner'])"
               color="secondary"
               no-caps
-              @click="openModalUpdateApproveStatus(detailData?.id.toString())"
+              @click="openModalUpdateApproveStatus(detailData?.id.toString() ?? '')"
               >Approve</q-btn
             >
           </div>

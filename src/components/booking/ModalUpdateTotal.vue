@@ -96,9 +96,10 @@ export default {
         this.isLoadingUpdate = true
 
         const payload: PayloadUpdateTotalReceivedItems = {
+          booking_id: Number(this.$route.params.id as string),
           item_id: this.id,
           po_number: this.poNumber,
-          total_received_items: this.formState.total_received_items,
+          total_received_items: Number(this.formState.total_received_items),
         }
 
         this.itemStore

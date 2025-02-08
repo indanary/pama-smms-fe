@@ -74,6 +74,7 @@ declare global {
   }
 
   interface PayloadUpdateTotalReceivedItems {
+    booking_id: number
     item_id: number
     po_number: string
     total_received_items: number
