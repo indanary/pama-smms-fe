@@ -212,6 +212,7 @@ export default {
         const payload: PayloadUpdateBookingPoItems = {
           item_ids: this.selectedItem.map((item) => item.id),
           po_number: this.poNumber,
+          booking_id: this.bookingId,
         }
 
         this.bookingStore
