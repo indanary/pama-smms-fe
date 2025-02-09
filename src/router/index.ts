@@ -28,7 +28,7 @@ export default defineRouter(function (/* { store, ssrContext } */) {
   const tokenStore = useTokenStore()
   const userStore = useUserStore()
 
-  Router.beforeEach(async (to, from, next) => {
+  Router.beforeEach((to, from, next) => {
     Loading.show({
       message: 'Loading...',
     })
@@ -51,9 +51,7 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     }
 
     if (isAuthenticated && to.meta.requireAuth) {
-      if (userStore.userProfile === null) {
-        await userStore.getUserProfile()
-      }
+      userStore.getUserProfile()
     }
 
     next()

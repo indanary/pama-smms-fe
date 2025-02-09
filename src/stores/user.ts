@@ -23,6 +23,8 @@ export const useUserStore = defineStore('user', {
 
             tokenStore.forceLogoutUser()
 
+            window.location.href = '/login'
+
             reject(err)
           })
       })

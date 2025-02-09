@@ -1,6 +1,7 @@
 import { defineBoot } from '#q-app/wrappers'
 import axios, { type AxiosInstance } from 'axios'
 import { useTokenStore } from 'src/stores/token'
+import { getCookie } from 'app/utils/cookie'
 declare module 'vue' {
   interface ComponentCustomProperties {
     $axios: AxiosInstance
@@ -24,7 +25,7 @@ api.interceptors.request.use(
       }
 
       // add auth header
-      config.headers['Authorization'] = 'Bearer ' + tokenStore.getAccessToken()
+      config.headers['Authorization'] = 'Bearer ' + getCookie('accessToken')
     }
 
     return config
@@ -41,7 +42,7 @@ api.interceptors.response.use(
   async (err) => {
     // error status 401 = not authorized
     // force logout user
-    if (err.response?.status == 401) {
+    if (err.status == 401) {
       const tokenStore = useTokenStore()
       tokenStore.forceLogoutUser()
     }

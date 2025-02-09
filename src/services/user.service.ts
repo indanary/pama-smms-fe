@@ -10,7 +10,7 @@ export default {
           resolve(res)
         })
         .catch((err) => {
-          reject(err.response.data.message ?? 'Unknown error')
+          reject(err?.response?.data?.message ?? 'Unknown error')
         })
     })
   },
