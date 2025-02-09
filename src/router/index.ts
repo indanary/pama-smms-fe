@@ -1,7 +1,6 @@
 import { defineRouter } from '#q-app/wrappers'
 import { createRouter, createWebHistory } from 'vue-router'
 import routes from './routes'
-import { Loading } from 'quasar'
 import { useTokenStore } from 'src/stores/token'
 import { useUserStore } from 'src/stores/user'
 
@@ -29,10 +28,6 @@ export default defineRouter(function (/* { store, ssrContext } */) {
   const userStore = useUserStore()
 
   Router.beforeEach((to, from, next) => {
-    Loading.show({
-      message: 'Loading...',
-    })
-
     // set document title
     if (to.meta.title) {
       document.title = `${to.meta.title} | SiBook`
@@ -55,10 +50,6 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     }
 
     next()
-  })
-
-  Router.afterEach(() => {
-    Loading.hide()
   })
 
   return Router
