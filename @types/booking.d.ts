@@ -130,6 +130,33 @@ declare global {
   interface ResponseDeleteBookingPo {
     message: string
   }
+
+  interface ExcelColumnBookingPo {
+    'Booking ID': string
+    'PO Number': string
+    'Item Stock Code': number
+    'Total Qty': number
+  }
+
+  interface ExcelDataBookingPo {
+    booking_id: string
+    po_number: string
+    item_stock_code: number
+    total_qty: number
+    error_message: string
+  }
+
+  interface PayloadUploadBookingPo {
+    po_data: {
+      po_number: string
+      item_stock_code: number
+      total_qty: number
+    }[]
+  }
+
+  interface ResponseUploadBookingPo {
+    message: string
+  }
 }
 
 export {}

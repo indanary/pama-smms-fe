@@ -149,7 +149,7 @@
           <TabListPo
             :booking-po="bookingPo"
             :is-loading-po="isLoadingPo"
-            :total-items="itemBookingList.length"
+            :item-booking-list="itemBookingList"
             @refresh="refreshUpdateItems"
           ></TabListPo>
         </q-tab-panel>

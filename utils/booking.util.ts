@@ -26,4 +26,8 @@ export class BookingRules {
 
     return true
   }
+
+  validateFileRequired(val: object | null): boolean | string {
+    return val !== null || 'Field is required'
+  }
 }

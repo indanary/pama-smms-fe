@@ -151,4 +151,17 @@ export default {
         })
     })
   },
+
+  uploadBookingPo(id: number, payload: PayloadUploadBookingPo): Promise<ResponseUploadBookingPo> {
+    return new Promise((resolve, reject) => {
+      api
+        .put(`/bookings/${id}/po-upload`, payload)
+        .then((res) => {
+          resolve({ message: res.data.message })
+        })
+        .catch((err) => {
+          reject(err.response.data.message ?? 'Unknown error')
+        })
+    })
+  },
 }

@@ -1,14 +1,27 @@
 <template>
   <div style="display: flex; justify-content: space-between; align-items: center">
     <span style="font-size: 20px; font-weight: 600">List PO Numbers</span>
-    <q-btn
+    <q-btn-dropdown
       v-if="$permission(['purchasing', 'inventory'])"
+      :disable="disableUpdatePO()"
+      label="Add PO Number"
       color="primary"
       no-caps
-      :disable="disableUpdatePO()"
-      @click="openModalUpdatePO"
-      >Add PO Number</q-btn
     >
+      <q-list>
+        <q-item clickable v-close-popup @click="openModalUpdatePO">
+          <q-item-section>
+            <q-item-label>Input Manually</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item clickable v-close-popup @click="openModalImportPO">
+          <q-item-section>
+            <q-item-label>Import PO</q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </q-btn-dropdown>
     <div v-else></div>
   </div>
 
@@ -71,7 +84,7 @@
 
           <template v-else-if="col.name === 'action'">
             <q-btn
-              v-if="props.row.items.length === 0"
+              v-if="$permission(['purchasing', 'inventory']) && props.row.items.length === 0"
               label="Delete PO"
               no-caps
               color="red"
@@ -97,6 +110,7 @@ import ModalUpdatePO from 'src/components/booking/ModalUpdatePO.vue'
 import ModalUpdateDueDate from 'src/components/booking/ModalUpdateDueDate.vue'
 import ModalChoosePOItem from 'src/components/booking/ModalChoosePOItem.vue'
 import ModalItemDetails from 'src/components/booking/ModalItemDetails.vue'
+import ModalImportPO from 'src/components/booking/ModalImportPO.vue'
 
 export default {
   name: 'TabListPo',
@@ -109,8 +123,8 @@ export default {
       type: Boolean,
       required: true,
     },
-    totalItems: {
-      type: Number,
+    itemBookingList: {
+      type: Object as () => ItemBooking[],
       required: true,
     },
   },
@@ -184,7 +198,7 @@ export default {
 
   methods: {
     disableUpdatePO(): boolean {
-      return this.bookingPo.length === this.totalItems
+      return this.bookingPo.length === this.itemBookingList.length
     },
 
     openModalUpdatePO(): void {
@@ -193,7 +207,21 @@ export default {
           component: ModalUpdatePO,
           componentProps: {
             id: this.$route.params.id as string,
-            totalItems: this.totalItems,
+            totalItems: this.itemBookingList.length,
+          },
+        })
+        .onOk(() => {
+          this.$emit('refresh')
+        })
+    },
+
+    openModalImportPO(): void {
+      this.$q
+        .dialog({
+          component: ModalImportPO,
+          componentProps: {
+            id: this.$route.params.id as string,
+            itemBookingList: this.itemBookingList,
           },
         })
         .onOk(() => {
