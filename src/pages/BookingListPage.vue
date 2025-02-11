@@ -39,7 +39,7 @@
                   :color="props.row.approved_status === 0 ? 'red' : 'green'"
                 ></q-icon>
                 <q-btn
-                  v-if="props.row.approved_status === 0 && $permission(['planner'])"
+                  v-if="props.row.approved_status === 0 && $permission(['planner', 'super_admin'])"
                   color="secondary"
                   no-caps
                   @click.stop="openModalUpdateApproveStatus(props.row.id)"
@@ -93,7 +93,7 @@
                 v-if="
                   props.row.wr_no !== '' &&
                   props.row.booking_status === 'open' &&
-                  $permission(['warehouse'])
+                  $permission(['warehouse', 'super_admin'])
                 "
                 color="secondary"
                 no-caps
@@ -109,7 +109,7 @@
             <template v-else-if="col.name === 'action'">
               <div style="display: flex; align-items: center; gap: 8px">
                 <q-btn
-                  v-if="$permission(['warehouse'])"
+                  v-if="$permission(['warehouse', 'super_admin'])"
                   color="red"
                   no-caps
                   @click.stop="openModalDelete(props.row.id)"

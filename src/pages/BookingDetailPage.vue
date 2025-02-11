@@ -29,7 +29,7 @@
               :color="detailData?.approved_status === 0 ? 'red' : 'green'"
             ></q-icon>
             <q-btn
-              v-if="detailData?.approved_status === 0 && $permission(['planner'])"
+              v-if="detailData?.approved_status === 0 && $permission(['planner', 'super_admin'])"
               color="secondary"
               no-caps
               @click="openModalUpdateApproveStatus(detailData?.id.toString() ?? '')"
@@ -52,7 +52,7 @@
               {{ detailData?.received_date }}
             </span>
             <q-btn
-              v-if="detailData?.received_date === '' && $permission(['warehouse'])"
+              v-if="detailData?.received_date === '' && $permission(['warehouse', 'super_admin'])"
               color="secondary"
               no-caps
               @click="openModalUpdateReceived(detailData?.id)"
@@ -72,7 +72,9 @@
           <template v-if="detailData?.approved_status === 1">
             <q-btn
               v-if="
-                detailData?.received === 1 && detailData?.wr_no === '' && $permission(['planner'])
+                detailData?.received === 1 &&
+                detailData?.wr_no === '' &&
+                $permission(['planner', 'super_admin'])
               "
               color="secondary"
               no-caps
@@ -88,7 +90,7 @@
             v-if="
               detailData?.wr_no !== '' &&
               detailData?.booking_status === 'open' &&
-              $permission(['warehouse'])
+              $permission(['warehouse', 'super_admin'])
             "
             color="secondary"
             no-caps
@@ -121,7 +123,7 @@
         <div style="display: flex; align-items: left; gap: 8px">
           <!-- <q-btn color="secondary" no-caps>Edit</q-btn> -->
           <q-btn
-            v-if="$permission(['warehouse'])"
+            v-if="$permission(['warehouse', 'super_admin'])"
             color="red"
             no-caps
             @click="openModalDelete(detailData?.id)"

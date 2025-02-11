@@ -2,7 +2,7 @@
   <div style="display: flex; justify-content: space-between; align-items: center">
     <span style="font-size: 20px; font-weight: 600">List PO Numbers</span>
     <q-btn-dropdown
-      v-if="$permission(['purchasing', 'inventory'])"
+      v-if="$permission(['purchasing', 'inventory', 'super_admin'])"
       :disable="disableUpdatePO()"
       label="Add PO Number"
       color="primary"
@@ -46,7 +46,7 @@
             <div style="display: flex; align-items: center; justify-content: start; gap: 16px">
               <span v-if="props.row.due_date !== ''">{{ props.row.due_date }}</span>
               <q-btn
-                v-if="$permission(['inventory', 'purchasing'])"
+                v-if="$permission(['inventory', 'purchasing', 'super_admin'])"
                 label="Update Due Date"
                 no-caps
                 color="secondary"
@@ -84,7 +84,10 @@
 
           <template v-else-if="col.name === 'action'">
             <q-btn
-              v-if="$permission(['purchasing', 'inventory']) && props.row.items.length === 0"
+              v-if="
+                $permission(['purchasing', 'inventory', 'super_admin']) &&
+                props.row.items.length === 0
+              "
               label="Delete PO"
               no-caps
               color="red"
