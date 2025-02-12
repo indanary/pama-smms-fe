@@ -230,7 +230,7 @@ export default {
             XLSX.utils.sheet_to_json<ExcelColumnBookingPo>(worksheet)
 
           this.bookingStore
-            .mapExportedBookingPo(jsonData, this.itemBookingList, this.id)
+            .mapExportedBookingPo(jsonData, this.itemBookingList, this.id, this.itemBookingList)
             .then((res: ExcelDataBookingPo[]) => {
               this.tableData = res
               this.isItemEmpty = this.tableData.length === 0

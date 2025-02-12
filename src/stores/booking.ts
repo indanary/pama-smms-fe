@@ -185,6 +185,7 @@ export const useBookingStore = defineStore('booking', {
       data: ExcelColumnBookingPo[],
       listItem: ItemBooking[],
       bookingId: string,
+      itemBookingList: ItemBooking[],
     ): Promise<ExcelDataBookingPo[]> {
       return new Promise((resolve, reject) => {
         try {
@@ -225,6 +226,7 @@ export const useBookingStore = defineStore('booking', {
             mappedData,
             listItem,
             bookingId,
+            itemBookingList,
           )
 
           resolve(validatedData)
@@ -238,6 +240,7 @@ export const useBookingStore = defineStore('booking', {
       data: ExcelDataBookingPo[],
       listItem: ItemBooking[],
       bookingId: string,
+      itemBookingList: ItemBooking[],
     ): ExcelDataBookingPo[] {
       const filteredBooking = data.filter((booking) => {
         const id = booking.booking_id.split('BOOKSM')[1]
@@ -253,7 +256,32 @@ export const useBookingStore = defineStore('booking', {
           : 'Item with this stock code not found',
       }))
 
-      return matchItemStock
+      const poNumbersSet = new Set(
+        itemBookingList.map((item) => item.po_number).filter((po) => po !== null),
+      )
+      const matchedRes = matchItemStock.map((booking) => ({
+        ...booking,
+        error_message: poNumbersSet.has(booking.po_number) ? 'PO Number already existed' : '',
+      }))
+
+      const finalRes = matchedRes.map((booking) => {
+        // Find the corresponding stock item based on stock_code/item_stock_code
+        const stockItem = itemBookingList.find(
+          (stock) => stock.stock_code === booking.item_stock_code,
+        )
+
+        // Check if the found stock item has a non-null po_number
+        if (stockItem && stockItem.po_number !== null) {
+          return {
+            ...booking,
+            error_message: 'This item is already included in a PO Number',
+          }
+        }
+
+        return booking
+      })
+
+      return finalRes
     },
   },
 })

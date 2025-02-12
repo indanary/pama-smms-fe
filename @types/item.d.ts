@@ -7,6 +7,7 @@ declare global {
     class: string
     item_name: string
     uoi: string
+    po_number: string
     created_at: string
     created_by: string
     last_updated_at: string
