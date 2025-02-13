@@ -1,8 +1,8 @@
 <template>
   <PageCard title="Booking List">
-    <div style="display: flex; justify-content: space-between; align-items: center">
+    <div class="filter-layout">
       <q-btn label="Export Excel" color="primary" no-caps @click="exportData"></q-btn>
-      <div style="width: 280px">
+      <div class="input-search">
         <SearchInput
           :placeholder="'Search by Booking ID, PO Numbers'"
           @search="onSearch"
@@ -434,3 +434,27 @@ export default {
   },
 }
 </script>
+
+<style lang="scss">
+.filter-layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  flex-direction: row;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: start;
+    gap: 12px;
+  }
+}
+
+.input-search {
+  width: 280px;
+
+  @media (max-width: 600px) {
+    width: 100%;
+  }
+}
+</style>

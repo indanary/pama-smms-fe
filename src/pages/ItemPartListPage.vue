@@ -1,6 +1,6 @@
 <template>
   <PageCard title="Item Part List">
-    <div style="display: flex; justify-content: space-between; align-items: center">
+    <div class="filter-layout">
       <q-btn-dropdown label="Add Item Part" color="primary" no-caps>
         <q-list>
           <q-item clickable v-close-popup @click="openModalAddInput">
@@ -16,7 +16,7 @@
           </q-item>
         </q-list>
       </q-btn-dropdown>
-      <div style="width: 324px">
+      <div class="input-search">
         <SearchInput
           :placeholder="'Search by Stock Code, Part No, Item Name'"
           @search="onSearch"
@@ -233,3 +233,27 @@ export default {
   },
 }
 </script>
+
+<style lang="scss">
+.filter-layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  flex-direction: row;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: start;
+    gap: 12px;
+  }
+}
+
+.input-search {
+  width: 324px;
+
+  @media (max-width: 600px) {
+    width: 100%;
+  }
+}
+</style>

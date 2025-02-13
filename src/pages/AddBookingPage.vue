@@ -1,7 +1,7 @@
 <template>
   <PageCard title="Add Booking">
-    <q-form greedy ref="formRef" style="width: 100%; display: flex; gap: 24px">
-      <div style="display: flex; flex-direction: column; gap: 8px; width: 50%">
+    <q-form greedy ref="formRef" class="form-layout">
+      <div class="left-layout">
         <div style="display: flex; flex-direction: column; gap: 8px">
           <span class="app-input-required">Description</span>
           <q-input
@@ -38,7 +38,7 @@
         </div>
       </div>
 
-      <div style="width: 50%">
+      <div class="right-layout">
         <span class="app-input-required">Selected Item Parts</span>
         <div
           style="
@@ -207,3 +207,37 @@ export default {
   },
 }
 </script>
+
+<style lang="scss">
+.form-layout {
+  width: 100%;
+  display: flex;
+  gap: 24px;
+
+  flex-direction: row;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+.left-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 50%;
+
+  @media (max-width: 600px) {
+    width: 100%;
+  }
+}
+
+.right-layout {
+  width: 50%;
+
+  @media (max-width: 600px) {
+    width: 100%;
+  }
+}
+</style>

@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex; justify-content: space-between; align-items: center">
+  <div class="header-layout">
     <span style="font-size: 20px; font-weight: 600">List PO Numbers</span>
     <q-btn-dropdown
       v-if="$permission(['purchasing', 'inventory', 'super_admin'])"
@@ -7,6 +7,7 @@
       label="Add PO Number"
       color="primary"
       no-caps
+      class="btn-add-po"
     >
       <q-list>
         <q-item clickable v-close-popup @click="openModalUpdatePO">
@@ -280,3 +281,24 @@ export default {
   },
 }
 </script>
+
+<style lang="scss">
+.header-layout {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: start;
+    gap: 12px;
+  }
+}
+
+.btn-add-po {
+  @media (max-width: 600px) {
+    align-self: flex-end;
+  }
+}
+</style>
