@@ -283,5 +283,20 @@ export const useBookingStore = defineStore('booking', {
 
       return finalRes
     },
+
+    updateSpreadsheet(): Promise<void> {
+      return new Promise((resolve, reject) => {
+        bookingService
+          .updateSpreadsheet()
+          .then((res) => {
+            showNotificationSuccess(res.message)
+            resolve()
+          })
+          .catch((err) => {
+            showNotificationFailed(err)
+            reject(err)
+          })
+      })
+    },
   },
 })

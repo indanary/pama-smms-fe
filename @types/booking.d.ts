@@ -157,6 +157,10 @@ declare global {
   interface ResponseUploadBookingPo {
     message: string
   }
+
+  interface ResponseUpdateSpreadsheet {
+    message: string
+  }
 }
 
 export {}

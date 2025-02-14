@@ -164,4 +164,17 @@ export default {
         })
     })
   },
+
+  updateSpreadsheet(): Promise<ResponseUpdateSpreadsheet> {
+    return new Promise((resolve, reject) => {
+      api
+        .post('/update-sheet/generate')
+        .then((res) => {
+          resolve({ message: res.data.message })
+        })
+        .catch((err) => {
+          reject(err.response.data.message ?? 'Unknown error')
+        })
+    })
+  },
 }

@@ -1,7 +1,22 @@
 <template>
   <PageCard title="Booking List">
     <div class="filter-layout">
-      <q-btn label="Export Excel" color="primary" no-caps @click="exportData"></q-btn>
+      <div style="display: flex; gap: 12px; align-items: center">
+        <q-btn
+          label="Export Excel"
+          color="primary"
+          no-caps
+          :loading="isLoadingExport"
+          @click="exportData"
+        ></q-btn>
+        <q-btn
+          label="Update Spreadsheet"
+          color="primary"
+          no-caps
+          :loading="isLoadingUpdateSheet"
+          @click="updateSpreadsheet"
+        ></q-btn>
+      </div>
       <div class="input-search">
         <SearchInput
           :placeholder="'Search by Booking ID, PO Numbers'"
@@ -279,6 +294,7 @@ export default {
       limit: tablePaginations.rowsPerPage,
     })
     const isLoadingExport = ref(false)
+    const isLoadingUpdateSheet = ref(false)
 
     return {
       bookingStore,
@@ -288,6 +304,7 @@ export default {
       isLoadingFetchList,
       params,
       isLoadingExport,
+      isLoadingUpdateSheet,
     }
   },
 
@@ -430,6 +447,14 @@ export default {
         .finally(() => {
           this.isLoadingExport = false
         })
+    },
+
+    updateSpreadsheet(): void {
+      this.isLoadingUpdateSheet = true
+
+      this.bookingStore.updateSpreadsheet().finally(() => {
+        this.isLoadingUpdateSheet = false
+      })
     },
   },
 }
