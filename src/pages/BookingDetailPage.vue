@@ -18,6 +18,10 @@
           <span>{{ detailData?.description }}</span>
         </DetailItem>
 
+        <DetailItem label="Requested By">
+          <span>{{ detailData?.requested_by }}</span>
+        </DetailItem>
+
         <DetailItem label="CN No">
           <span>{{ detailData?.cn_no }}</span>
         </DetailItem>

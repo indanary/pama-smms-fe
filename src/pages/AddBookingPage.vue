@@ -30,6 +30,19 @@
           ></q-input>
         </div>
 
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px">
+          <span>Requested By</span>
+          <q-input
+            v-model="formState.requested_by"
+            type="text"
+            filled
+            dense
+            outlined
+            placeholder="Input requested by"
+            @update:model-value="convertToUppercase('requested_by')"
+          ></q-input>
+        </div>
+
         <div style="display: flex; flex-direction: column; gap: 8px">
           <span class="app-input-required">Item Parts</span>
           <div style="display: flex; align-items: start; gap: 16px">
@@ -146,6 +159,7 @@ export default {
       description: '',
       cn_no: '',
       items: [],
+      requested_by: '',
     })
 
     const isLoadingAdd = ref(false)
@@ -173,6 +187,7 @@ export default {
           description: this.formState.description,
           cn_no: this.formState.cn_no,
           items: itemsPayload,
+          requested_by: this.formState.requested_by,
         }
 
         this.bookingStore

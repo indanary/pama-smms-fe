@@ -17,6 +17,7 @@ declare global {
     remove_reason: string
     po_numbers: string[]
     aging: number
+    requested_by: string
   }
 
   interface ParamBookingList {
@@ -41,12 +42,14 @@ declare global {
     description: string
     cn_no: string
     items: SelectedItemBooking[]
+    requested_by: string
   }
 
   interface PayloadAddBooking {
     description: string
     cn_no: string
     items: { id: number; qty: number }[]
+    requested_by?: string
   }
 
   interface ResponseAddBooking {

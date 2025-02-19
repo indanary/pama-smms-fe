@@ -184,6 +184,13 @@ export default {
         align: 'center',
       },
       {
+        name: 'requested_by',
+        required: true,
+        label: 'Requested By',
+        field: 'requested_by',
+        align: 'center',
+      },
+      {
         name: 'cn_no',
         required: true,
         label: 'CN No',
