@@ -33,13 +33,13 @@ export const useItemStore = defineStore('item', {
       })
     },
 
-    addItem(payload: PayloadAddItem): Promise<void> {
+    addItem(payload: PayloadAddItem): Promise<Item> {
       return new Promise((resolve, reject) => {
         itemService
           .addItem(payload)
           .then((res) => {
             showNotificationSuccess(res.message)
-            resolve()
+            resolve(res.item)
           })
           .catch((err) => {
             showNotificationFailed(err)
@@ -121,6 +121,21 @@ export const useItemStore = defineStore('item', {
         } catch (error) {
           reject(error)
         }
+      })
+    },
+
+    updateItem(id: number, payload: PayloadUpdateItem): Promise<void> {
+      return new Promise((resolve, reject) => {
+        itemService
+          .updateItem(id, payload)
+          .then((res) => {
+            showNotificationSuccess(res.message)
+            resolve()
+          })
+          .catch((err) => {
+            showNotificationFailed(err)
+            reject(err)
+          })
       })
     },
   },

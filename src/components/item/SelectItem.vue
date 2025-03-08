@@ -19,6 +19,7 @@
     <template v-slot:selected-item="{ opt, toggleOption }">
       <template v-if="modelValue.length > 0">
         <q-chip
+          v-if="opt.stock_code !== null"
           dense
           removable
           color="gray"
@@ -27,6 +28,17 @@
           @remove="toggleOption(opt)"
         >
           Stock Code: {{ opt.stock_code }}
+        </q-chip>
+        <q-chip
+          v-else
+          dense
+          removable
+          color="gray"
+          text-color="black"
+          style="cursor: pointer"
+          @remove="toggleOption(opt)"
+        >
+          Part No: {{ opt.part_no }}
         </q-chip>
       </template>
     </template>

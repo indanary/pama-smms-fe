@@ -35,7 +35,7 @@ declare global {
   }
 
   interface FormAddItem {
-    stock_code: number | undefined
+    stock_code: number | undefined | null
     part_no: string
     mnemonic: string
     class: string
@@ -47,6 +47,7 @@ declare global {
 
   interface ResponseAddItem {
     message: string
+    item: Item
   }
 
   interface ExcelColumnItem {
@@ -82,6 +83,15 @@ declare global {
   }
 
   interface ResponseUpdateTotalReceivedItems {
+    message: string
+  }
+
+  interface PayloadUpdateItem {
+    stock_code?: number
+    class?: string
+  }
+
+  interface ResponseUpdateItem {
     message: string
   }
 }

@@ -33,7 +33,7 @@ export default {
       api
         .post('/items', payload)
         .then((res) => {
-          resolve({ message: res.data.message })
+          resolve(res.data)
         })
         .catch((err) => {
           reject(err.response.data.message ?? 'Unknown error')
@@ -60,6 +60,19 @@ export default {
     return new Promise((resolve, reject) => {
       api
         .post('/items/upload', payload)
+        .then((res) => {
+          resolve({ message: res.data.message })
+        })
+        .catch((err) => {
+          reject(err.response.data.message ?? 'Unknown error')
+        })
+    })
+  },
+
+  updateItem(id: number, payload: PayloadUpdateItem): Promise<ResponseUpdateItem> {
+    return new Promise((resolve, reject) => {
+      api
+        .put(`/items/${id}`, payload)
         .then((res) => {
           resolve({ message: res.data.message })
         })

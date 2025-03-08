@@ -44,7 +44,16 @@
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 8px">
-          <span class="app-input-required">Item Parts</span>
+          <div style="display: flex; align-items: center; gap: 8px">
+            <span class="app-input-required">Item Parts</span>
+            <q-btn
+              no-caps
+              size="sm"
+              label="Add Manual"
+              color="primary"
+              @click="openModalAddManual"
+            ></q-btn>
+          </div>
           <div style="display: flex; align-items: start; gap: 16px">
             <SelectItem v-model="formState.items"></SelectItem>
           </div>
@@ -148,6 +157,7 @@ import { reactive, ref } from 'vue'
 import { useBookingStore } from 'src/stores/booking'
 import SelectItem from 'src/components/item/SelectItem.vue'
 import { BookingRules } from 'app/utils/booking.util.js'
+import ModalAddManualItem from 'src/components/booking/ModalAddManualItem.vue'
 
 export default {
   name: 'AddBookingPage',
@@ -218,6 +228,16 @@ export default {
 
     onRemoveSelectedItem(index: number): void {
       this.formState.items = [...this.formState.items.filter((_, idx) => idx !== index)]
+    },
+
+    openModalAddManual(): void {
+      this.$q
+        .dialog({
+          component: ModalAddManualItem,
+        })
+        .onOk((data: SelectedItemBooking) => {
+          this.formState.items = [...this.formState.items, data]
+        })
     },
   },
 }

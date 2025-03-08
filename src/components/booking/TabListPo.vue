@@ -202,7 +202,15 @@ export default {
 
   methods: {
     disableUpdatePO(): boolean {
-      return this.bookingPo.length === this.itemBookingList.length
+      if (this.bookingPo.length === this.itemBookingList.length) {
+        return true
+      }
+
+      if (this.itemBookingList.some((item) => item.stock_code === null || item.class === '')) {
+        return true
+      }
+
+      return false
     },
 
     openModalUpdatePO(): void {

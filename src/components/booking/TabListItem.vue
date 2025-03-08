@@ -34,6 +34,32 @@
               </template>
             </div>
           </template>
+
+          <template v-else-if="col.name === 'stock_code'">
+            <q-btn
+              v-if="!props.row.stock_code"
+              label="Update Stock Code"
+              no-caps
+              color="secondary"
+              size="sm"
+              @click="openModalUpdateStockCode(props.row.id)"
+            ></q-btn>
+
+            <span v-else>{{ props.row.stock_code }}</span>
+          </template>
+
+          <template v-else-if="col.name === 'class'">
+            <q-btn
+              v-if="props.row.class === ''"
+              label="Update Class"
+              no-caps
+              color="secondary"
+              size="sm"
+              @click="openModalUpdateClass(props.row.id)"
+            ></q-btn>
+
+            <span v-else>{{ props.row.class }}</span>
+          </template>
           <template v-else>
             <span>{{ props.row[col.name] }}</span>
           </template>
@@ -46,6 +72,8 @@
 <script lang="ts">
 import { type QTableColumn } from 'quasar'
 import ModalUpdateTotal from 'components/booking/ModalUpdateTotal.vue'
+import ModalUpdateStockCode from './ModalUpdateStockCode.vue'
+import ModalUpdateClass from './ModalUpdateClass.vue'
 
 export default {
   name: 'TabListItem',
@@ -159,6 +187,32 @@ export default {
             totalItems: item_qty,
             totalReceived: total_received_items,
             poNumber: po_number,
+          },
+        })
+        .onOk(() => {
+          this.$emit('refresh')
+        })
+    },
+
+    openModalUpdateStockCode(id: number): void {
+      this.$q
+        .dialog({
+          component: ModalUpdateStockCode,
+          componentProps: {
+            id: id,
+          },
+        })
+        .onOk(() => {
+          this.$emit('refresh')
+        })
+    },
+
+    openModalUpdateClass(id: number): void {
+      this.$q
+        .dialog({
+          component: ModalUpdateClass,
+          componentProps: {
+            id: id,
           },
         })
         .onOk(() => {
