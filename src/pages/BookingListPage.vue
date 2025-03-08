@@ -18,10 +18,7 @@
         ></q-btn>
       </div>
       <div class="input-search">
-        <SearchInput
-          :placeholder="'Search by Booking ID, PO Numbers'"
-          @search="onSearch"
-        ></SearchInput>
+        <SearchInput :placeholder="'Search by Booking ID, CN No'" @search="onSearch"></SearchInput>
       </div>
     </div>
 
